@@ -8,7 +8,9 @@ const sqlite = new Database('sqlite.db');
 const db = drizzle(sqlite);
 
 export const userTable = sqliteTable('user', {
-	id: text('id').notNull().primaryKey()
+	id: text('id').notNull().primaryKey(),
+	username: text('username', { length: 64 }).notNull(),
+	hashed_password: text('hashed_password', { length: 128 }).notNull()
 });
 
 export const sessionTable = sqliteTable('session', {
