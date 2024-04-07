@@ -5,7 +5,7 @@ import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 
 const sqlite = new Database('sqlite.db');
-const db = drizzle(sqlite);
+export const db = drizzle(sqlite);
 
 export const userTable = sqliteTable('user', {
 	id: text('id').notNull().primaryKey(),

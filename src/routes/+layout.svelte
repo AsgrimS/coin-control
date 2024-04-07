@@ -1,11 +1,21 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	import { AppShell, AppBar, Avatar } from '@skeletonlabs/skeleton';
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
+	import type { PageData } from './$types';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+
+	export let data: PageData;
+	const { user } = data;
+
+	const getInitials = (username: string) => {
+		const names = username.split(' ');
+		const initials = names.map((name) => name[0]).join('');
+		return initials;
+	};
 </script>
 
 <!-- App Shell -->
@@ -19,7 +29,12 @@
 				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<a href="/signup"> Sign Up </a>
+				{#if user !== null}
+					<a href="/logout"> Logout </a>
+					<Avatar width="w-8" initials={getInitials(user.username)} />
+				{:else}
+					<a href="/signup"> Sign Up </a>
+				{/if}
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
