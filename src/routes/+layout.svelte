@@ -9,7 +9,8 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	export let data: PageData;
-	const { user } = data;
+	let { user } = data;
+	$: user = data.user;
 
 	const getInitials = (username: string) => {
 		const names = username.split(' ');
@@ -30,7 +31,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				{#if user !== null}
-					<a href="/logout"> Logout </a>
+					<a href="/logout" data-sveltekit-preload-data="off" data-sveltekit-reload> Logout </a>
 					<Avatar width="w-8" initials={getInitials(user.username)} />
 				{:else}
 					<a href="/signup"> Sign Up </a>
