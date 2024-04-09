@@ -34,6 +34,7 @@
 					<Avatar width="w-8" initials={getInitials(user.username)} />
 				{:else}
 					<a href="/signup"> Sign Up </a>
+					<a href="/login"> Login </a>
 				{/if}
 			</svelte:fragment>
 		</AppBar>
