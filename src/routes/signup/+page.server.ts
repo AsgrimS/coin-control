@@ -1,13 +1,22 @@
 import { lucia } from '$lib/server/auth';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { generateId } from 'lucia';
 import { Argon2id } from 'oslo/password';
 
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { db, userTable } from '$lib/server/schema';
+import { getLimiter } from '$lib/server/limiter';
+
+const limiter = getLimiter('signup');
+
+export const load: PageServerLoad = async (event) => {
+	await limiter.cookieLimiter?.preflight(event);
+};
 
 export const actions: Actions = {
 	default: async (event) => {
+		if (await limiter.isLimited(event)) error(429);
+
 		const formData = await event.request.formData();
 		const username = formData.get('username');
 		const password = formData.get('password');

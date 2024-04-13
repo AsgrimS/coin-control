@@ -1,13 +1,22 @@
 import { lucia } from '$lib/server/auth';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, error } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
 
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { db, userTable } from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
+import { getLimiter } from '$lib/server/limiter';
+
+const limiter = getLimiter('login');
+
+export const load: PageServerLoad = async (event) => {
+	await limiter.cookieLimiter?.preflight(event);
+};
 
 export const actions: Actions = {
 	default: async (event) => {
+		if (await limiter.isLimited(event)) error(429);
+
 		const formData = await event.request.formData();
 		const username = formData.get('username');
 		const password = formData.get('password');
@@ -28,32 +37,20 @@ export const actions: Actions = {
 			});
 		}
 
-		// const existingUser = await db
-		// 	.table('username')
-		// 	.where('username', '=', username.toLowerCase())
-		// 	.get();
-
 		const [existingUser] = await db
 			.select()
 			.from(userTable)
 			.where(eq(userTable.username, username.toLowerCase()));
 
 		if (!existingUser) {
-			// NOTE:
-			// Returning immediately allows malicious actors to figure out valid usernames from response times,
-			// allowing them to only focus on guessing passwords in brute-force attacks.
-			// As a preventive measure, you may want to hash passwords even for invalid usernames.
-			// However, valid usernames can be already be revealed with the signup page among other methods.
-			// It will also be much more resource intensive.
-			// Since protecting against this is non-trivial,
-			// it is crucial your implementation is protected against brute-force attacks with login throttling etc.
-			// If usernames are public, you may outright tell the user that the username is invalid.
+			// This is to prevent timing attacks
+			new Argon2id().hash(password);
 			return fail(400, {
 				message: 'Incorrect username or password'
 			});
 		}
 
-		const validPassword = await new Argon2id().verify(existingUser.hashed_password, password);
+		const validPassword = await new Argon2id().verify(existingUser.hashed_password ?? '', password);
 		if (!validPassword) {
 			return fail(400, {
 				message: 'Incorrect username or password'
