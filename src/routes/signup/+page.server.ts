@@ -3,53 +3,48 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { generateId } from 'lucia';
 import { Argon2id } from 'oslo/password';
 
+import { superValidate, setError } from 'sveltekit-superforms';
+import { typebox } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { db, userTable } from '$lib/server/schema';
 import { getLimiter } from '$lib/server/limiter';
+import { signUpSchema } from '$lib/forms';
+import { eq } from 'drizzle-orm';
 
-const limiter = getLimiter('signup');
+const limiter = getLimiter('signup', [5, 'm']);
 
 export const load: PageServerLoad = async (event) => {
+	const form = await superValidate(typebox(signUpSchema));
 	await limiter.cookieLimiter?.preflight(event);
+
+	return { form };
 };
 
 export const actions: Actions = {
 	default: async (event) => {
+		const form = await superValidate(event.request, typebox(signUpSchema));
+		if (!form.valid) return fail(400, { form });
 		if (await limiter.isLimited(event)) error(429);
 
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
-		const repeatePassword = formData.get('repeat-password');
-		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
-		// keep in mind some database (e.g. mysql) are case insensitive
-		if (
-			typeof username !== 'string' ||
-			username.length < 3 ||
-			username.length > 31 ||
-			!/^[a-z0-9_-]+$/.test(username)
-		) {
-			return fail(400, {
-				message: 'Invalid username'
-			});
-		}
+		const { username, password, repeatPassword } = form.data;
 
-		if (typeof password !== 'string' || password.length < 6 || password.length > 255) {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
-
-		if (password !== repeatePassword) {
-			return fail(400, {
-				message: 'Passwords do not match'
-			});
+		if (password !== repeatPassword) {
+			const errorMessage = 'Passwords do not match';
+			setError(form, 'repeatPassword', errorMessage);
+			setError(form, 'password', errorMessage);
+			return fail(400, { form });
 		}
 
 		const userId = generateId(15);
 		const hashedPassword = await new Argon2id().hash(password);
 
-		// TODO: check if username is already used
+		const [existingUser] = await db
+			.select()
+			.from(userTable)
+			.where(eq(userTable.username, username.toLowerCase()));
+
+		if (existingUser) return setError(form, 'username', 'This username is already taken');
+
 		await db.insert(userTable).values({
 			id: userId,
 			username: username,

@@ -6,36 +6,26 @@ import type { Actions, PageServerLoad } from './$types';
 import { db, userTable } from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import { getLimiter } from '$lib/server/limiter';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { typebox } from 'sveltekit-superforms/adapters';
+import { loginSchema } from '$lib/forms';
 
 const limiter = getLimiter('login');
 
 export const load: PageServerLoad = async (event) => {
+	const form = await superValidate(typebox(loginSchema));
 	await limiter.cookieLimiter?.preflight(event);
+
+	return { form };
 };
 
 export const actions: Actions = {
 	default: async (event) => {
+		const form = await superValidate(event.request, typebox(loginSchema));
+		if (!form.valid) return fail(400, { form });
 		if (await limiter.isLimited(event)) error(429);
 
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
-
-		if (
-			typeof username !== 'string' ||
-			username.length < 3 ||
-			username.length > 31 ||
-			!/^[a-z0-9_-]+$/.test(username)
-		) {
-			return fail(400, {
-				message: 'Invalid username'
-			});
-		}
-		if (typeof password !== 'string' || password.length < 6 || password.length > 255) {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
+		const { username, password } = form.data;
 
 		const [existingUser] = await db
 			.select()
@@ -45,17 +35,11 @@ export const actions: Actions = {
 		if (!existingUser) {
 			// This is to prevent timing attacks
 			new Argon2id().hash(password);
-			return fail(400, {
-				message: 'Incorrect username or password'
-			});
+			return setError(form, 'password', 'Incorrect username or password');
 		}
 
 		const validPassword = await new Argon2id().verify(existingUser.hashed_password ?? '', password);
-		if (!validPassword) {
-			return fail(400, {
-				message: 'Incorrect username or password'
-			});
-		}
+		if (!validPassword) return setError(form, 'password', 'Incorrect username or password');
 
 		const session = await lucia.createSession(existingUser.id, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);

@@ -1,23 +1,77 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { superForm } from 'sveltekit-superforms';
+	import type { PageData } from './$types';
+	import FormError from '$lib/components/FormError.svelte';
+
+	export let data: PageData;
+	let isRateLimited = false;
+
+	const { form, errors, constraints, enhance } = superForm(data.form, {
+		onChange() {
+			if (Object.keys($errors).length === 0) return;
+			errors.clear();
+		},
+		onError(error) {
+			if (error.result.status === 429) isRateLimited = true;
+		}
+	});
 </script>
 
 <div class="mt-12 flex justify-center">
 	<div class="card inline-block p-8">
-		<form class="flex flex-col gap-4" method="post" use:enhance>
-			<label class="label">
-				<span>Username</span>
-				<input class="input" type="text" name="username" />
-			</label>
-			<label class="label mt-2">
-				<span>Password</span>
-				<input class="input" type="password" name="password" />
-			</label>
-			<label class="label">
-				<span>Repeat Password</span>
-				<input class="input" type="password" name="repeat-password" />
-			</label>
-			<button class="variant-filled btn mt-6">Sign Up</button>
+		<form class="flex h-full flex-col" method="post" use:enhance>
+			<div class="min-h-24">
+				<label class="label">
+					<span>Username</span>
+					<input
+						class="input"
+						class:input-error={$errors.username}
+						type="text"
+						name="username"
+						aria-invalid={$errors.username ? 'true' : undefined}
+						bind:value={$form.username}
+						{...$constraints.username}
+					/>
+				</label>
+				{#if $errors.username}
+					<FormError message={$errors.username} />
+				{/if}
+			</div>
+			<div class="min-h-24">
+				<label class="label">
+					<span>Password</span>
+					<input
+						class="input"
+						class:input-error={$errors.password}
+						type="password"
+						name="password"
+						aria-invalid={$errors.password ? 'true' : undefined}
+						bind:value={$form.password}
+						{...$constraints.password}
+					/>
+				</label>
+			</div>
+			<div class="min-h-24">
+				<label class="label">
+					<span>Repeat Password</span>
+					<input
+						class="input"
+						class:input-error={$errors.repeatPassword}
+						type="password"
+						name="repeatPassword"
+						aria-invalid={$errors.repeatPassword ? 'true' : undefined}
+						bind:value={$form.repeatPassword}
+						{...$constraints.repeatPassword}
+					/>
+				</label>
+				{#if $errors.repeatPassword && !isRateLimited}
+					<FormError message={$errors.repeatPassword} />
+				{/if}
+				{#if isRateLimited}
+					<FormError message="You've attempted to register too many times" />
+				{/if}
+			</div>
+			<button class="variant-filled btn mt-4">Sign Up</button>
 		</form>
 	</div>
 </div>
