@@ -6,10 +6,11 @@ import { Argon2id } from 'oslo/password';
 import { superValidate, setError } from 'sveltekit-superforms';
 import { typebox } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
-import { db, userTable } from '$lib/server/schema';
 import { getLimiter } from '$lib/server/limiter';
 import { signUpSchema } from '$lib/forms';
 import { eq } from 'drizzle-orm';
+import { userTable } from '$lib/server/db/schema';
+import { db } from '$lib/server/db';
 
 const limiter = getLimiter('signup', [5, 'm']);
 

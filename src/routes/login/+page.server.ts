@@ -3,12 +3,13 @@ import { fail, redirect, error } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
 
 import type { Actions, PageServerLoad } from './$types';
-import { db, userTable } from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import { getLimiter } from '$lib/server/limiter';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { typebox } from 'sveltekit-superforms/adapters';
 import { loginSchema } from '$lib/forms';
+import { userTable } from '$lib/server/db/schema';
+import { db } from '$lib/server/db';
 
 const limiter = getLimiter('login');
 
