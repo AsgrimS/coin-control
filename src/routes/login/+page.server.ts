@@ -3,7 +3,7 @@ import { fail, redirect, error } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
 
 import type { Actions, PageServerLoad } from './$types';
-import { eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { getLimiter } from '$lib/server/limiter';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { typebox } from 'sveltekit-superforms/adapters';
@@ -31,7 +31,7 @@ export const actions: Actions = {
 		const [existingUser] = await db
 			.select()
 			.from(userTable)
-			.where(eq(userTable.username, username.toLowerCase()));
+			.where(sql`lower(${userTable.username}) = ${username.toLowerCase()}`);
 
 		if (!existingUser) {
 			// This is to prevent timing attacks

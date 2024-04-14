@@ -8,7 +8,7 @@ import { typebox } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { getLimiter } from '$lib/server/limiter';
 import { signUpSchema } from '$lib/forms';
-import { eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { userTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 
@@ -42,7 +42,7 @@ export const actions: Actions = {
 		const [existingUser] = await db
 			.select()
 			.from(userTable)
-			.where(eq(userTable.username, username.toLowerCase()));
+			.where(sql`lower(${userTable.username}) = ${username.toLowerCase()}`);
 
 		if (existingUser) return setError(form, 'username', 'This username is already taken');
 

@@ -73,6 +73,9 @@ devDependencies:
   eslint-plugin-svelte:
     specifier: ^2.35.1
     version: 2.35.1(eslint@8.57.0)(svelte@4.2.12)
+  inversify:
+    specifier: ^6.0.2
+    version: 6.0.2
   lucia:
     specifier: ^3.1.1
     version: 3.1.1
@@ -91,6 +94,9 @@ devDependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.5.13
     version: 0.5.13(prettier-plugin-svelte@3.2.2)(prettier@3.2.5)
+  reflect-metadata:
+    specifier: ^0.2.2
+    version: 0.2.2
   svelte:
     specifier: ^4.2.7
     version: 4.2.12
@@ -3306,6 +3312,10 @@ packages:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
     dev: true
 
+  /inversify@6.0.2:
+    resolution: {integrity: sha512-i9m8j/7YIv4mDuYXUAcrpKPSaju/CIly9AHK5jvCBeoiM/2KEsuCQTTP+rzSWWpLYWRukdXFSl6ZTk2/uumbiA==}
+    dev: true
+
   /is-binary-path@2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
     engines: {node: '>=8'}
@@ -4069,6 +4079,10 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
+    dev: true
+
+  /reflect-metadata@0.2.2:
+    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
     dev: true
 
   /resolve-from@4.0.0:

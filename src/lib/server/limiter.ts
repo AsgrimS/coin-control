@@ -1,7 +1,11 @@
 import { RateLimiter, type Rate } from 'sveltekit-rate-limiter/server';
-import { RATE_LIMITER_SECRET } from '$env/static/private';
+import { RATE_LIMITER_SECRET, RATE_LIMITER_DISABLED } from '$env/static/private';
 
 export const getLimiter = (limiterId: string, rate: Rate = [3, 'm']) => {
+	if (!RATE_LIMITER_DISABLED) {
+		rate[0] = 1000;
+	}
+
 	return new RateLimiter({
 		// A rate is defined as [number, unit]
 		IP: rate, // IP address limiter
