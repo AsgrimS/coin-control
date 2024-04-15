@@ -1,54 +1,51 @@
-import { lucia } from '$lib/server/auth';
-import { fail, redirect, error } from '@sveltejs/kit';
-import { Argon2id } from 'oslo/password';
+import { loginSchema } from "$lib/forms"
+import { lucia } from "$lib/server/auth"
+import { getLimiter } from "$lib/server/limiter"
+import { AuthService } from "$lib/server/services/authService"
+import { UserService } from "$lib/server/services/userService"
+import type { Actions, PageServerLoad } from "./$types"
+import { fail, redirect, error } from "@sveltejs/kit"
+import { setError, superValidate } from "sveltekit-superforms"
+import { typebox } from "sveltekit-superforms/adapters"
 
-import type { Actions, PageServerLoad } from './$types';
-import { sql } from 'drizzle-orm';
-import { getLimiter } from '$lib/server/limiter';
-import { setError, superValidate } from 'sveltekit-superforms';
-import { typebox } from 'sveltekit-superforms/adapters';
-import { loginSchema } from '$lib/forms';
-import { userTable } from '$lib/server/db/schema';
-import { db } from '$lib/server/db';
-
-const limiter = getLimiter('login');
+const limiter = getLimiter("login")
+const userService = new UserService()
+const authService = new AuthService()
 
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(typebox(loginSchema));
-	await limiter.cookieLimiter?.preflight(event);
+	const form = await superValidate(typebox(loginSchema))
+	await limiter.cookieLimiter?.preflight(event)
 
-	return { form };
-};
+	return { form }
+}
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event.request, typebox(loginSchema));
-		if (!form.valid) return fail(400, { form });
-		if (await limiter.isLimited(event)) error(429);
+		const incorrectCredentialsMessage = "Incorrect username or password"
+		const form = await superValidate(event.request, typebox(loginSchema))
+		if (!form.valid) return fail(400, { form })
+		if (await limiter.isLimited(event)) error(429)
 
-		const { username, password } = form.data;
+		const { username, password } = form.data
 
-		const [existingUser] = await db
-			.select()
-			.from(userTable)
-			.where(sql`lower(${userTable.username}) = ${username.toLowerCase()}`);
+		const user = await userService.getUserByUsername(username)
 
-		if (!existingUser) {
+		if (!user) {
 			// This is to prevent timing attacks
-			new Argon2id().hash(password);
-			return setError(form, 'password', 'Incorrect username or password');
+			authService.hashPassword(password)
+			return setError(form, "password", incorrectCredentialsMessage)
 		}
 
-		const validPassword = await new Argon2id().verify(existingUser.hashed_password ?? '', password);
-		if (!validPassword) return setError(form, 'password', 'Incorrect username or password');
+		const isPasswordValid = await authService.verifyPassword(user.hashedPassword, password)
+		if (!isPasswordValid) return setError(form, "password", incorrectCredentialsMessage)
 
-		const session = await lucia.createSession(existingUser.id, {});
-		const sessionCookie = lucia.createSessionCookie(session.id);
+		const session = await lucia.createSession(user.id, {})
+		const sessionCookie = lucia.createSessionCookie(session.id)
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
+			path: ".",
 			...sessionCookie.attributes
-		});
+		})
 
-		redirect(302, '/');
+		redirect(302, "/")
 	}
-};
+}

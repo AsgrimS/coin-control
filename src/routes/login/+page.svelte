@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import type { PageData } from './$types';
-	import FormError from '$lib/components/FormError.svelte';
+	import { superForm } from "sveltekit-superforms"
+	import type { PageData } from "./$types"
+	import FormError from "$lib/components/FormError.svelte"
 
-	export let data: PageData;
-	let isRateLimited = false;
+	export let data: PageData
+	let isRateLimited = false
 
 	const { form, errors, constraints, enhance } = superForm(data.form, {
 		onChange() {
-			if (Object.keys($errors).length === 0) return;
-			errors.clear();
-			isRateLimited = false;
+			if (Object.keys($errors).length === 0) return
+			errors.clear()
+			isRateLimited = false
 		},
 		onError(error) {
-			if (error.result.status === 429) isRateLimited = true;
+			if (error.result.status === 429) isRateLimited = true
 		}
-	});
+	})
 </script>
 
 <div class="mt-12 flex justify-center">
@@ -29,7 +29,7 @@
 						class:input-error={$errors.password}
 						type="text"
 						name="username"
-						aria-invalid={$errors.username ? 'true' : undefined}
+						aria-invalid={$errors.username ? "true" : undefined}
 						bind:value={$form.username}
 						{...$constraints.username}
 					/>
@@ -43,7 +43,7 @@
 						class:input-error={$errors.password}
 						type="password"
 						name="password"
-						aria-invalid={$errors.password ? 'true' : undefined}
+						aria-invalid={$errors.password ? "true" : undefined}
 						bind:value={$form.password}
 						{...$constraints.password}
 					/>

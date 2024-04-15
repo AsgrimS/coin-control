@@ -1,64 +1,61 @@
-import { lucia } from '$lib/server/auth';
-import { error, fail, redirect } from '@sveltejs/kit';
-import { generateId } from 'lucia';
-import { Argon2id } from 'oslo/password';
+import { UserAlreadyExistsError } from "$lib/errors"
+import { signUpSchema } from "$lib/forms"
+import { lucia } from "$lib/server/auth"
+import { getLimiter } from "$lib/server/limiter"
+import { AuthService } from "$lib/server/services/authService"
+import { UserService } from "$lib/server/services/userService"
+import type { Actions, PageServerLoad } from "./$types"
+import { error, fail, redirect } from "@sveltejs/kit"
+import { superValidate, setError } from "sveltekit-superforms"
+import { typebox } from "sveltekit-superforms/adapters"
 
-import { superValidate, setError } from 'sveltekit-superforms';
-import { typebox } from 'sveltekit-superforms/adapters';
-import type { Actions, PageServerLoad } from './$types';
-import { getLimiter } from '$lib/server/limiter';
-import { signUpSchema } from '$lib/forms';
-import { sql } from 'drizzle-orm';
-import { userTable } from '$lib/server/db/schema';
-import { db } from '$lib/server/db';
-
-const limiter = getLimiter('signup', [5, 'm']);
+const limiter = getLimiter("signup", [5, "m"])
+const userService = new UserService()
+const authService = new AuthService()
 
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(typebox(signUpSchema));
-	await limiter.cookieLimiter?.preflight(event);
+	const form = await superValidate(typebox(signUpSchema))
+	await limiter.cookieLimiter?.preflight(event)
 
-	return { form };
-};
+	return { form }
+}
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event.request, typebox(signUpSchema));
-		if (!form.valid) return fail(400, { form });
-		if (await limiter.isLimited(event)) error(429);
+		const form = await superValidate(event.request, typebox(signUpSchema))
+		if (!form.valid) return fail(400, { form })
+		if (await limiter.isLimited(event)) error(429)
 
-		const { username, password, repeatPassword } = form.data;
+		const { username, password, repeatPassword } = form.data
 
 		if (password !== repeatPassword) {
-			const errorMessage = 'Passwords do not match';
-			setError(form, 'repeatPassword', errorMessage);
-			setError(form, 'password', errorMessage);
-			return fail(400, { form });
+			const passwordsMismatchMessage = "Passwords do not match"
+			setError(form, "repeatPassword", passwordsMismatchMessage)
+			setError(form, "password", passwordsMismatchMessage)
+			return fail(400, { form })
 		}
 
-		const userId = generateId(15);
-		const hashedPassword = await new Argon2id().hash(password);
+		const id = authService.generateUserId()
+		const hashedPassword = await authService.hashPassword(password)
 
-		const [existingUser] = await db
-			.select()
-			.from(userTable)
-			.where(sql`lower(${userTable.username}) = ${username.toLowerCase()}`);
+		const userCreateResult = await userService.createUser({
+			id,
+			username,
+			hashedPassword
+		})
 
-		if (existingUser) return setError(form, 'username', 'This username is already taken');
+		if (userCreateResult instanceof UserAlreadyExistsError) {
+			setError(form, "username", "This username is already taken")
+			return fail(400, { form })
+		}
 
-		await db.insert(userTable).values({
-			id: userId,
-			username: username,
-			hashed_password: hashedPassword
-		});
-
-		const session = await lucia.createSession(userId, {});
-		const sessionCookie = lucia.createSessionCookie(session.id);
+		const session = await lucia.createSession(id, {})
+		const sessionCookie = lucia.createSessionCookie(session.id)
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
+			path: ".",
 			...sessionCookie.attributes
-		});
+		})
 
-		redirect(302, '/');
+		redirect(302, "/")
 	}
-};
+}

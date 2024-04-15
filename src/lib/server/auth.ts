@@ -1,6 +1,6 @@
-import { Lucia } from 'lucia';
-import { dev } from '$app/environment';
-import { adapter } from './db';
+import { dev } from "$app/environment"
+import { adapter } from "./db"
+import { Lucia } from "lucia"
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
@@ -12,17 +12,17 @@ export const lucia = new Lucia(adapter, {
 	getUserAttributes: (attributes) => {
 		return {
 			username: attributes.username
-		};
+		}
 	}
-});
+})
 
-declare module 'lucia' {
+declare module "lucia" {
 	interface Register {
-		Lucia: typeof lucia;
-		DatabaseUserAttributes: DatabaseUserAttributes;
+		Lucia: typeof lucia
+		DatabaseUserAttributes: DatabaseUserAttributes
 	}
 }
 
 interface DatabaseUserAttributes {
-	username: string;
+	username: string
 }

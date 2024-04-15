@@ -1,9 +1,9 @@
-import { RateLimiter, type Rate } from 'sveltekit-rate-limiter/server';
-import { RATE_LIMITER_SECRET, RATE_LIMITER_DISABLED } from '$env/static/private';
+import { RATE_LIMITER_SECRET, RATE_LIMITER_DISABLED } from "$env/static/private"
+import { RateLimiter, type Rate } from "sveltekit-rate-limiter/server"
 
-export const getLimiter = (limiterId: string, rate: Rate = [3, 'm']) => {
+export const getLimiter = (limiterId: string, rate: Rate = [3, "m"]) => {
 	if (!RATE_LIMITER_DISABLED) {
-		rate[0] = 1000;
+		rate[0] = 1000
 	}
 
 	return new RateLimiter({
@@ -17,5 +17,5 @@ export const getLimiter = (limiterId: string, rate: Rate = [3, 'm']) => {
 			rate: rate,
 			preflight: true // Require preflight call (see load function)
 		}
-	});
-};
+	})
+}

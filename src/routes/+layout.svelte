@@ -1,22 +1,22 @@
 <script lang="ts">
-	import '../app.postcss';
-	import { AppShell, AppBar, Avatar } from '@skeletonlabs/skeleton';
+	import "../app.postcss"
+	import { AppShell, AppBar, Avatar } from "@skeletonlabs/skeleton"
 
 	// Floating UI for Popups
-	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
-	import type { PageData } from './$types';
-	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom"
+	import { storePopup } from "@skeletonlabs/skeleton"
+	import type { PageData } from "./$types"
+	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow })
 
-	export let data: PageData;
-	let { user } = data;
-	$: user = data.user;
+	export let data: PageData
+	let { user } = data
+	$: user = data.user
 
 	const getInitials = (username: string) => {
-		const names = username.split(' ');
-		const initials = names.map((name) => name[0]).join('');
-		return initials;
-	};
+		const names = username.split(" ")
+		const initials = names.map((name) => name[0]).join("")
+		return initials
+	}
 </script>
 
 <!-- App Shell -->

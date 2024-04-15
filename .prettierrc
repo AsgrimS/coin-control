@@ -1,8 +1,13 @@
 {
+	"$schema": "https://json.schemastore.org/prettierrc",
 	"useTabs": true,
-	"singleQuote": true,
 	"trailingComma": "none",
+	"semi": false,
 	"printWidth": 100,
-	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+	"plugins": [
+		"prettier-plugin-svelte",
+		"prettier-plugin-tailwindcss",
+		"@trivago/prettier-plugin-sort-imports"
+	],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
 }

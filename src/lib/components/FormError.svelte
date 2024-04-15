@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let message: string | string[];
+	export let message: string | string[]
 </script>
 
 <p class="text-xs text-error-500">
