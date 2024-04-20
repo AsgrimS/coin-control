@@ -1,11 +1,11 @@
 export interface UserDto {
-	id: string
-	username: string
-	hashedPassword: string
+	readonly id: string
+	readonly username: string
+	readonly hashedPassword: string
 }
 
 export interface UserCreateDto {
-	id: string
-	username: string
-	hashedPassword: string
+	readonly id: string
+	readonly username: string
+	readonly hashedPassword: string
 }

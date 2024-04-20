@@ -23,11 +23,11 @@ export const actions: Actions = {
 	default: async (event) => {
 		const incorrectCredentialsMessage = "Incorrect username or password"
 		const form = await superValidate(event.request, typebox(loginSchema))
+
 		if (!form.valid) return fail(400, { form })
 		if (await limiter.isLimited(event)) error(429)
 
 		const { username, password } = form.data
-
 		const user = await userService.getUserByUsername(username)
 
 		if (!user) {
@@ -41,6 +41,7 @@ export const actions: Actions = {
 
 		const session = await lucia.createSession(user.id, {})
 		const sessionCookie = lucia.createSessionCookie(session.id)
+
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: ".",
 			...sessionCookie.attributes
