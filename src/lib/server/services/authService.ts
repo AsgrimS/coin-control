@@ -8,15 +8,21 @@ export interface IAuthService {
 }
 
 export class AuthService implements IAuthService {
+	private readonly hashingAlgorithm: Argon2id
+
+	constructor() {
+		this.hashingAlgorithm = new Argon2id()
+	}
+
 	generateUserId() {
 		return generateId(15)
 	}
 
 	async hashPassword(password: string): Promise<string> {
-		return await new Argon2id().hash(password)
+		return await this.hashingAlgorithm.hash(password)
 	}
 
 	async verifyPassword(hashedPassword: string, password: string): Promise<boolean> {
-		return await new Argon2id().verify(hashedPassword, password)
+		return await this.hashingAlgorithm.verify(hashedPassword, password)
 	}
 }

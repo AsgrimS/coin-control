@@ -1,4 +1,3 @@
-import { UserAlreadyExistsError } from "$lib/errors"
 import { signUpSchema } from "$lib/forms"
 import { lucia } from "$lib/server/auth"
 import { getLimiter } from "$lib/server/limiter"
@@ -38,13 +37,13 @@ export const actions: Actions = {
 		const id = authService.generateUserId()
 		const hashedPassword = await authService.hashPassword(password)
 
-		const userCreateResult = await userService.createUser({
+		const isUserCreated = await userService.createUser({
 			id,
 			username,
 			hashedPassword
 		})
 
-		if (userCreateResult instanceof UserAlreadyExistsError) {
+		if (!isUserCreated) {
 			setError(form, "username", "This username is already taken")
 			return fail(400, { form })
 		}

@@ -1,59 +1,58 @@
 import type { UserCreateDto, UserDto } from "$lib/dtos/user"
-import { UserAlreadyExistsError } from "$lib/errors"
-import { db } from "../db"
-import { userTable } from "../db/schema"
-import { sql } from "drizzle-orm"
+import { UserAlreadyExistsError, UserNotFoundError } from "../errors"
+import { UserRepository, type IUserRepository } from "../repositories/userRepository"
 
 export interface IUserService {
-	createUser(payload: UserCreateDto): Promise<UserAlreadyExistsError | void>
+	createUser(payload: UserCreateDto): Promise<boolean>
 	getUserByUsername(username: string): Promise<UserDto | null>
 	getUserById(id: string): Promise<UserDto | null>
 }
 
 export class UserService implements IUserService {
-	async createUser(payload: UserCreateDto): Promise<UserAlreadyExistsError | void> {
-		const { username, hashedPassword, id } = payload
-		const [existingUser] = await db
-			.select()
-			.from(userTable)
-			.where(sql`lower(${userTable.username}) = ${username.toLowerCase()}`)
+	private readonly userRepository: IUserRepository
 
-		if (existingUser) return new UserAlreadyExistsError()
+	constructor() {
+		this.userRepository = new UserRepository()
+	}
 
-		await db.insert(userTable).values({
-			id,
-			username: username,
-			hashed_password: hashedPassword
-		})
+	async createUser(payload: UserCreateDto): Promise<boolean> {
+		try {
+			await this.userRepository.createUser({
+				id: payload.id,
+				username: payload.username,
+				hashedPassword: payload.hashedPassword
+			})
+		} catch (error) {
+			if (error instanceof UserAlreadyExistsError) return false
+			throw error
+		}
+
+		return true
 	}
 
 	async getUserByUsername(username: string): Promise<UserDto | null> {
-		const [existingUser] = await db
-			.select()
-			.from(userTable)
-			.where(sql`lower(${userTable.username}) = ${username.toLowerCase()}`)
+		let user
 
-		if (!existingUser) return null
-
-		return {
-			id: existingUser.id,
-			username: existingUser.username,
-			hashedPassword: existingUser.hashed_password
+		try {
+			user = await this.userRepository.getUserByUsername(username)
+		} catch (error) {
+			if (error instanceof UserNotFoundError) return null
+			throw error
 		}
+
+		return user.toDto()
 	}
 
 	async getUserById(id: string): Promise<UserDto | null> {
-		const [existingUser] = await db
-			.select()
-			.from(userTable)
-			.where(sql`${userTable.id} = ${id}`)
+		let user
 
-		if (!existingUser) return null
-
-		return {
-			id: existingUser.id,
-			username: existingUser.username,
-			hashedPassword: existingUser.hashed_password
+		try {
+			user = await this.userRepository.getUserById(id)
+		} catch (error) {
+			if (error instanceof UserNotFoundError) return null
+			throw error
 		}
+
+		return user.toDto()
 	}
 }
