@@ -13,3 +13,12 @@ export const sessionTable = sqliteTable("session", {
 		.references(() => userTable.id),
 	expiresAt: integer("expires_at").notNull()
 })
+
+export const budgetTable = sqliteTable("budget", {
+	id: text("id").notNull().primaryKey(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => userTable.id),
+	amount: integer("amount").notNull(),
+	resetAt: integer("reset_at", { mode: "timestamp" }).notNull()
+})
