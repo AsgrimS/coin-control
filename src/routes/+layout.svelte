@@ -6,6 +6,7 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom"
 	import { storePopup } from "@skeletonlabs/skeleton"
 	import type { PageData } from "./$types"
+	import { onMount } from "svelte"
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow })
 
 	export let data: PageData
@@ -17,6 +18,28 @@
 		const initials = names.map((name) => name[0]).join("")
 		return initials
 	}
+
+	const detectSWUpdate = async () => {
+		const registration = await navigator.serviceWorker.ready
+
+		registration.addEventListener("updatefound", () => {
+			const newSW = registration.installing
+			newSW?.addEventListener("statechange", () => {
+				if (newSW.state === "installed") {
+					if (navigator.serviceWorker.controller) {
+						if (confirm("New content is available! Reaload to update?")) {
+							newSW.postMessage({ type: "SKIP_WAITING" })
+							window.location.reload()
+						}
+					}
+				}
+			})
+		})
+	}
+
+	onMount(() => {
+		detectSWUpdate()
+	})
 </script>
 
 <!-- App Shell -->
