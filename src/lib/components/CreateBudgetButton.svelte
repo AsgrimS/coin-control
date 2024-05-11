@@ -2,4 +2,6 @@
 	import TablerSquarePlus from "~icons/tabler/square-plus"
 </script>
 
-<TablerSquarePlus />
+<a href="/budget/add" class="variant-filled btn">
+	<TablerSquarePlus class="text-2xl" />
+</a>
