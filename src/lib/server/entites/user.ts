@@ -27,7 +27,7 @@ export class UserEntity {
 		})
 	}
 
-	toDto(): UserDto {
+	toDTO(): UserDto {
 		return {
 			id: this.id,
 			username: this.username,

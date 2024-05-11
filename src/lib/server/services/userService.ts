@@ -40,7 +40,7 @@ export class UserService implements IUserService {
 			throw error
 		}
 
-		return user.toDto()
+		return user.toDTO()
 	}
 
 	async getUserById(id: string): Promise<UserDto | null> {
@@ -53,6 +53,6 @@ export class UserService implements IUserService {
 			throw error
 		}
 
-		return user.toDto()
+		return user.toDTO()
 	}
 }
