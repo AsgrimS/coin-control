@@ -5,3 +5,7 @@ export class UserAlreadyExistsError extends Error {
 export class UserNotFoundError extends Error {
 	name = "UserNotFoundError"
 }
+
+export class BudgetNotFoundError extends Error {
+	name = "BudgetNotFoundError"
+}
