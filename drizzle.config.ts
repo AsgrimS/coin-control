@@ -9,6 +9,7 @@ export default {
 	schema: "./src/lib/server/db/schema.ts",
 	out: "./drizzle",
 	driver: "turso",
+	dialect: "sqlite",
 	dbCredentials: {
 		url: DATABASE_URL,
 		authToken: DATABASE_AUTH
