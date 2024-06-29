@@ -1,12 +1,21 @@
+import type { Frequency } from "$lib/common"
 import { db } from "../db"
 import { budgetTable } from "../db/schema"
 import { BudgetEntity } from "../entites/budget"
 import { BudgetNotFoundError } from "../errors"
 import { sql } from "drizzle-orm"
 
+type CreateBudgetPayload = {
+	id: string
+	userId: string
+	amount: number
+	resetFrequency: Frequency
+}
+
 export interface IBudgetRepository {
 	getBudgetById(id: string): Promise<BudgetEntity>
 	getBudgetsByUserId(userId: string): Promise<BudgetEntity[]>
+	createBudget(payload: CreateBudgetPayload): Promise<void>
 }
 
 export class BudgetRepository implements IBudgetRepository {
@@ -22,7 +31,7 @@ export class BudgetRepository implements IBudgetRepository {
 			id: existingBudget.id,
 			userId: existingBudget.userId,
 			amount: existingBudget.amount,
-			resetAt: new Date(existingBudget.resetAt)
+			resetFrequency: existingBudget.resetFrequency
 		})
 	}
 
@@ -38,8 +47,18 @@ export class BudgetRepository implements IBudgetRepository {
 					id: budget.id,
 					userId: budget.userId,
 					amount: budget.amount,
-					resetAt: new Date(budget.resetAt)
+					resetFrequency: budget.resetFrequency
 				})
 		)
+	}
+
+	async createBudget(payload: CreateBudgetPayload): Promise<void> {
+		const { id, userId, amount, resetFrequency } = payload
+		await db.insert(budgetTable).values({
+			id,
+			userId,
+			amount,
+			resetFrequency: resetFrequency
+		})
 	}
 }

@@ -1,3 +1,4 @@
+import { frequency } from "$lib/common"
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
 
 export const userTable = sqliteTable("user", {
@@ -20,5 +21,5 @@ export const budgetTable = sqliteTable("budget", {
 		.notNull()
 		.references(() => userTable.id),
 	amount: integer("amount").notNull(),
-	resetAt: integer("reset_at", { mode: "timestamp" }).notNull()
+	resetFrequency: text("reset_frequency", { enum: frequency }).notNull()
 })

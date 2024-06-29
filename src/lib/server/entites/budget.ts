@@ -1,26 +1,27 @@
+import type { Frequency } from "$lib/common"
 import type { BudgetDto } from "$lib/dtos/budget"
 
 export class BudgetEntity {
 	readonly id: string
 	readonly userId: string
 	readonly amount: number
-	readonly resetAt: Date
+	readonly resetFrequency: Frequency
 
 	constructor({
 		id,
 		userId,
 		amount,
-		resetAt
+		resetFrequency
 	}: {
 		id: string
 		userId: string
 		amount: number
-		resetAt: Date
+		resetFrequency: Frequency
 	}) {
 		this.id = id
 		this.userId = userId
 		this.amount = amount
-		this.resetAt = resetAt
+		this.resetFrequency = resetFrequency
 	}
 
 	toDTO(): BudgetDto {
@@ -28,7 +29,7 @@ export class BudgetEntity {
 			id: this.id,
 			userId: this.userId,
 			amount: this.amount,
-			resetAt: this.resetAt
+			resetFrequency: this.resetFrequency
 		}
 	}
 }

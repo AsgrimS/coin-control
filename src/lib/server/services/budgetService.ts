@@ -1,10 +1,12 @@
-import type { BudgetDto } from "$lib/dtos/budget"
+import type { BudgetCreateDto, BudgetDto } from "$lib/dtos/budget"
 import { BudgetNotFoundError } from "../errors"
 import { BudgetRepository, type IBudgetRepository } from "../repositories/budgetRepository"
+import { generateId } from "lucia"
 
 export interface IBudgetService {
 	getBudgetById(id: string): Promise<BudgetDto | null>
 	getBudgetsByUserId(userId: string): Promise<BudgetDto[]>
+	createBudget(payload: BudgetCreateDto): Promise<boolean>
 }
 
 export class BudgetService implements IBudgetService {
@@ -30,5 +32,21 @@ export class BudgetService implements IBudgetService {
 	async getBudgetsByUserId(userId: string): Promise<BudgetDto[]> {
 		const budgets = await this.budgetRepository.getBudgetsByUserId(userId)
 		return budgets.map((budget) => budget.toDTO())
+	}
+
+	async createBudget(payload: BudgetCreateDto): Promise<boolean> {
+		try {
+			await this.budgetRepository.createBudget({
+				id: generateId(15),
+				userId: payload.userId,
+				amount: payload.amount,
+				resetFrequency: payload.resetFrequency
+			})
+		} catch (error) {
+			console.error(error)
+			return false
+		}
+
+		return true
 	}
 }
