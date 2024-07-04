@@ -19,3 +19,7 @@ export const createBudgetSchema = Type.Object({
 		{ default: FrequencyEnum.Monthly }
 	)
 })
+
+export const createTransactionSchema = Type.Object({
+	amount: Type.Integer({ minimum: 1, maximum: 1000000 })
+})

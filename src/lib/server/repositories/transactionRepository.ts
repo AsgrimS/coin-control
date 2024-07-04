@@ -36,17 +36,36 @@ export class TransactionRepository implements ITransactionRepository {
 	}
 
 	async getTransactionsByUserId(userId: string): Promise<TransactionEntity[]> {
-		return (await db
+		const transactions = await db
 			.select()
 			.from(transactionTable)
-			.where(sql`${transactionTable.userId} = ${userId}`)) as TransactionEntity[]
+			.where(sql`${transactionTable.userId} = ${userId}`)
+
+		return transactions.map(
+			(transaction) =>
+				new TransactionEntity({
+					id: transaction.id,
+					userId: transaction.userId,
+					budgetId: transaction.budgetId,
+					amount: transaction.amount
+				})
+		)
 	}
 
 	async getTransactionsByBudgetId(budgetId: string): Promise<TransactionEntity[]> {
-		return (await db
+		const transactions = await db
 			.select()
 			.from(transactionTable)
-			.where(sql`${transactionTable.budgetId} = ${budgetId}`)) as TransactionEntity[]
+			.where(sql`${transactionTable.budgetId} = ${budgetId}`)
+		return transactions.map(
+			(transaction) =>
+				new TransactionEntity({
+					id: transaction.id,
+					userId: transaction.userId,
+					budgetId: transaction.budgetId,
+					amount: transaction.amount
+				})
+		)
 	}
 
 	async createTransaction(payload: CreateTransactionPayload): Promise<void> {
