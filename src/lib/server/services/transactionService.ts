@@ -9,6 +9,7 @@ import { getRandomId } from "../utils"
 export interface ITransactionService {
 	getTransactionById(id: string): Promise<TransactionDto | null>
 	getTransactionsByUserId(userId: string): Promise<TransactionDto[]>
+	getTransactionsByBudgetId(budgetId: string): Promise<TransactionDto[]>
 	createTransaction(payload: TransactionCreateDto): Promise<boolean>
 }
 
@@ -34,6 +35,12 @@ export class TransactionService implements ITransactionService {
 
 	async getTransactionsByUserId(userId: string): Promise<TransactionDto[]> {
 		const transactions = await this.transactionRepository.getTransactionsByUserId(userId)
+
+		return transactions.map((transaction) => transaction.toDTO())
+	}
+
+	async getTransactionsByBudgetId(budgetId: string): Promise<TransactionDto[]> {
+		const transactions = await this.transactionRepository.getTransactionsByBudgetId(budgetId)
 
 		return transactions.map((transaction) => transaction.toDTO())
 	}

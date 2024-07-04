@@ -4,4 +4,4 @@
 	export let budget: BudgetDto
 </script>
 
-<a class="variant-filled btn" href={`/budget/${budget.id}`}> Budget: ${budget.amount} </a>
+<a class="variant-filled btn" href={`/budget/details/${budget.id}`}> Budget: ${budget.amount} </a>

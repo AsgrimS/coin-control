@@ -1,8 +1,10 @@
 import { BudgetService } from "$lib/server/services/budgetService"
+import { TransactionService } from "$lib/server/services/transactionService"
 import type { PageServerLoad } from "./$types"
-import { redirect } from "@sveltejs/kit"
+import { error, redirect } from "@sveltejs/kit"
 
 const budgetService = new BudgetService()
+const transactionService = new TransactionService()
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const { user } = locals
@@ -11,10 +13,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const budget = await budgetService.getBudgetById(params.budgetId)
 
-	if (!budget) redirect(302, "/404")
-	if (budget.userId !== user.id) redirect(302, "/403")
+	if (!budget || budget.userId !== user.id) error(404, "Budget not found")
+
+	const transactions = await transactionService.getTransactionsByBudgetId(params.budgetId)
 
 	return {
-		budget
+		budget,
+		transactions
 	}
 }

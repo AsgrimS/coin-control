@@ -14,6 +14,7 @@ type CreateTransactionPayload = {
 export interface ITransactionRepository {
 	getTransactionById(id: string): Promise<TransactionEntity>
 	getTransactionsByUserId(userId: string): Promise<TransactionEntity[]>
+	getTransactionsByBudgetId(budgetId: string): Promise<TransactionEntity[]>
 	createTransaction(payload: CreateTransactionPayload): Promise<void>
 }
 
@@ -39,6 +40,13 @@ export class TransactionRepository implements ITransactionRepository {
 			.select()
 			.from(transactionTable)
 			.where(sql`${transactionTable.userId} = ${userId}`)) as TransactionEntity[]
+	}
+
+	async getTransactionsByBudgetId(budgetId: string): Promise<TransactionEntity[]> {
+		return (await db
+			.select()
+			.from(transactionTable)
+			.where(sql`${transactionTable.budgetId} = ${budgetId}`)) as TransactionEntity[]
 	}
 
 	async createTransaction(payload: CreateTransactionPayload): Promise<void> {
