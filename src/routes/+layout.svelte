@@ -58,4 +58,6 @@
 		{/if}
 	</svelte:fragment>
 </AppBar>
-<slot />
+<section class="h-full px-8 py-1">
+	<slot />
+</section>

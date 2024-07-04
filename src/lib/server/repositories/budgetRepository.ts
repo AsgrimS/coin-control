@@ -20,18 +20,18 @@ export interface IBudgetRepository {
 
 export class BudgetRepository implements IBudgetRepository {
 	async getBudgetById(id: string): Promise<BudgetEntity> {
-		const [existingBudget] = await db
+		const [budget] = await db
 			.select()
 			.from(budgetTable)
 			.where(sql`${budgetTable.id} = ${id}`)
 
-		if (!existingBudget) throw new BudgetNotFoundError()
+		if (!budget) throw new BudgetNotFoundError()
 
 		return new BudgetEntity({
-			id: existingBudget.id,
-			userId: existingBudget.userId,
-			amount: existingBudget.amount,
-			resetFrequency: existingBudget.resetFrequency
+			id: budget.id,
+			userId: budget.userId,
+			amount: budget.amount,
+			resetFrequency: budget.resetFrequency
 		})
 	}
 

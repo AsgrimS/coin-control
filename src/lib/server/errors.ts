@@ -9,3 +9,7 @@ export class UserNotFoundError extends Error {
 export class BudgetNotFoundError extends Error {
 	name = "BudgetNotFoundError"
 }
+
+export class TransactionNotFoundError extends Error {
+	name = "TransactionNotFoundError"
+}
