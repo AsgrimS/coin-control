@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Budget from "$lib/components/Budget.svelte"
 	import CreateBudgetButton from "$lib/components/CreateBudgetButton.svelte"
 	import type { PageData } from "./$types"
 
@@ -14,6 +15,8 @@
 			<CreateBudgetButton />
 		</div>
 	{:else}
-		<p>Budget</p>
+		{#each budgets as budget}
+			<Budget {budget} />
+		{/each}
 	{/if}
 </div>
