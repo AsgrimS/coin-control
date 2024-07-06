@@ -58,6 +58,7 @@
 		{/if}
 	</svelte:fragment>
 </AppBar>
-<div class="h-full p-8">
+<!-- Adjust for the height of the AppBar -->
+<div class="h-[calc(100%_-_64px)] p-8">
 	<slot />
 </div>

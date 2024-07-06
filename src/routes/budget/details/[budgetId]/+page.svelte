@@ -17,8 +17,8 @@
 	})
 </script>
 
-<section>
-	<div class="flex gap-4">
+<section class="container mx-auto flex h-full flex-col">
+	<div class="mb-4 flex items-center justify-center gap-4">
 		<SpendingRadial spent={expenses} limit={data.budget.amount} />
 
 		<div class="card inline-block p-4">
