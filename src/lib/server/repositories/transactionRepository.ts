@@ -2,7 +2,7 @@ import { db } from "../db"
 import { transactionTable } from "../db/schema"
 import { TransactionEntity } from "../entites/transaction"
 import { TransactionNotFoundError } from "../errors"
-import { sql } from "drizzle-orm"
+import { asc, desc, sql } from "drizzle-orm"
 
 type CreateTransactionPayload = {
 	id: string
@@ -31,6 +31,7 @@ export class TransactionRepository implements ITransactionRepository {
 			id: transaction.id,
 			userId: transaction.userId,
 			budgetId: transaction.budgetId,
+			createdAt: transaction.createdAt,
 			amount: transaction.amount
 		})
 	}
@@ -40,6 +41,7 @@ export class TransactionRepository implements ITransactionRepository {
 			.select()
 			.from(transactionTable)
 			.where(sql`${transactionTable.userId} = ${userId}`)
+			.orderBy(desc(transactionTable.createdAt))
 
 		return transactions.map(
 			(transaction) =>
@@ -47,6 +49,7 @@ export class TransactionRepository implements ITransactionRepository {
 					id: transaction.id,
 					userId: transaction.userId,
 					budgetId: transaction.budgetId,
+					createdAt: transaction.createdAt,
 					amount: transaction.amount
 				})
 		)
@@ -57,12 +60,15 @@ export class TransactionRepository implements ITransactionRepository {
 			.select()
 			.from(transactionTable)
 			.where(sql`${transactionTable.budgetId} = ${budgetId}`)
+			.orderBy(desc(transactionTable.createdAt))
+
 		return transactions.map(
 			(transaction) =>
 				new TransactionEntity({
 					id: transaction.id,
 					userId: transaction.userId,
 					budgetId: transaction.budgetId,
+					createdAt: transaction.createdAt,
 					amount: transaction.amount
 				})
 		)

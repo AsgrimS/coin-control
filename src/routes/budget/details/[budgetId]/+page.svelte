@@ -4,6 +4,7 @@
 	import { superForm } from "sveltekit-superforms"
 	import FormError from "$lib/components/FormError.svelte"
 	import LoadingSpinner from "$lib/components/LoadingSpinner.svelte"
+	import TransactionsList from "$lib/components/TransactionsList.svelte"
 
 	export let data: PageData
 	$: expenses = data.transactions.reduce((acc, curr) => acc + curr.amount, 0)
@@ -51,16 +52,5 @@
 		</div>
 	</div>
 
-	<dl class="list-dl">
-		{#each data.transactions as transaction}
-			<div>
-				<span class="badge bg-primary-500">🪙</span>
-				<span class="flex-auto">
-					<dt>
-						{transaction.amount}
-					</dt>
-				</span>
-			</div>
-		{/each}
-	</dl>
+	<TransactionsList transactions={data.transactions} />
 </section>
