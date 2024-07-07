@@ -21,5 +21,9 @@ export const createBudgetSchema = Type.Object({
 })
 
 export const createTransactionSchema = Type.Object({
-	amount: Type.Integer({ minimum: 1, maximum: 1000000 })
+	amount: Type.Integer({ minimum: 1, maximum: 1000000, default: null })
+})
+
+export const deleteTransactionSchema = Type.Object({
+	transactionId: Type.String()
 })

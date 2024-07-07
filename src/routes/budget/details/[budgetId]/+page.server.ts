@@ -1,4 +1,4 @@
-import { createTransactionSchema } from "$lib/forms"
+import { createTransactionSchema, deleteTransactionSchema } from "$lib/forms"
 import { BudgetService } from "$lib/server/services/budgetService"
 import { TransactionService } from "$lib/server/services/transactionService"
 import type { Actions, PageServerLoad } from "./$types"
@@ -19,17 +19,20 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!budget || budget.userId !== user.id) error(404, "Budget not found")
 
 	const transactions = await transactionService.getTransactionsByBudgetId(params.budgetId)
-	const form = await superValidate(typebox(createTransactionSchema))
+
+	const createTransactionForm = await superValidate(typebox(createTransactionSchema))
+	const removeTransactionForm = await superValidate(typebox(deleteTransactionSchema))
 
 	return {
-		form,
+		createTransactionForm,
+		removeTransactionForm,
 		budget,
 		transactions
 	}
 }
 
 export const actions: Actions = {
-	default: async ({ params, locals, request }) => {
+	addTransaction: async ({ params, locals, request }) => {
 		const currentUser = locals.user
 		if (!currentUser) redirect(302, "/login")
 
@@ -45,6 +48,20 @@ export const actions: Actions = {
 		})
 
 		if (!isTransactionCreated) {
+			return fail(400, { form })
+		}
+	},
+
+	deleteTransaction: async ({ locals, request }) => {
+		const currentUser = locals.user
+		if (!currentUser) redirect(302, "/login")
+
+		const form = await superValidate(request, typebox(deleteTransactionSchema))
+		const { transactionId } = form.data
+
+		const isTransactionDeleted = await transactionService.deleteTransaction(transactionId)
+
+		if (!isTransactionDeleted) {
 			return fail(400, { form })
 		}
 	}

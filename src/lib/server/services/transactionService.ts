@@ -11,6 +11,7 @@ export interface ITransactionService {
 	getTransactionsByUserId(userId: string): Promise<TransactionDto[]>
 	getTransactionsByBudgetId(budgetId: string): Promise<TransactionDto[]>
 	createTransaction(payload: TransactionCreateDto): Promise<boolean>
+	deleteTransaction(id: string): Promise<boolean>
 }
 
 export class TransactionService implements ITransactionService {
@@ -56,6 +57,17 @@ export class TransactionService implements ITransactionService {
 		} catch (error) {
 			console.error(error)
 			return false
+		}
+
+		return true
+	}
+
+	async deleteTransaction(id: string): Promise<boolean> {
+		try {
+			await this.transactionRepository.deleteTransaction(id)
+		} catch (error) {
+			if (error instanceof TransactionNotFoundError) return false
+			throw error
 		}
 
 		return true

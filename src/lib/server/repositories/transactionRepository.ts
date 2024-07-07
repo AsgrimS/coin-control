@@ -2,7 +2,7 @@ import { db } from "../db"
 import { transactionTable } from "../db/schema"
 import { TransactionEntity } from "../entites/transaction"
 import { TransactionNotFoundError } from "../errors"
-import { asc, desc, sql } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 
 type CreateTransactionPayload = {
 	id: string
@@ -16,6 +16,7 @@ export interface ITransactionRepository {
 	getTransactionsByUserId(userId: string): Promise<TransactionEntity[]>
 	getTransactionsByBudgetId(budgetId: string): Promise<TransactionEntity[]>
 	createTransaction(payload: CreateTransactionPayload): Promise<void>
+	deleteTransaction(id: string): Promise<void>
 }
 
 export class TransactionRepository implements ITransactionRepository {
@@ -23,7 +24,7 @@ export class TransactionRepository implements ITransactionRepository {
 		const [transaction] = await db
 			.select()
 			.from(transactionTable)
-			.where(sql`${transactionTable.id} = ${id}`)
+			.where(eq(transactionTable.id, id))
 
 		if (!transaction) throw new TransactionNotFoundError()
 
@@ -40,7 +41,7 @@ export class TransactionRepository implements ITransactionRepository {
 		const transactions = await db
 			.select()
 			.from(transactionTable)
-			.where(sql`${transactionTable.userId} = ${userId}`)
+			.where(eq(transactionTable.userId, userId))
 			.orderBy(desc(transactionTable.createdAt))
 
 		return transactions.map(
@@ -59,7 +60,7 @@ export class TransactionRepository implements ITransactionRepository {
 		const transactions = await db
 			.select()
 			.from(transactionTable)
-			.where(sql`${transactionTable.budgetId} = ${budgetId}`)
+			.where(eq(transactionTable.budgetId, budgetId))
 			.orderBy(desc(transactionTable.createdAt))
 
 		return transactions.map(
@@ -83,5 +84,11 @@ export class TransactionRepository implements ITransactionRepository {
 			budgetId,
 			amount
 		})
+	}
+
+	async deleteTransaction(id: string): Promise<void> {
+		const deleteOperation = await db.delete(transactionTable).where(eq(transactionTable.id, id))
+
+		if (deleteOperation.rowsAffected === 0) throw new TransactionNotFoundError()
 	}
 }

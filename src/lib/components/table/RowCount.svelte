@@ -9,7 +9,5 @@
 		<b>{$rowCount.start}</b>
 		- <b>{$rowCount.end}</b>
 		/ <b>{$rowCount.total}</b>
-	{:else}
-		No entries found
 	{/if}
 </aside>
