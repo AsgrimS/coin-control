@@ -19,11 +19,10 @@
 	const rows = handler.getRows()
 </script>
 
-<article class="h-56 overflow-auto">
-	<!-- TODO: Keep header on top -->
-	<table class=" table table-compact relative border-collapse">
-		<thead>
-			<tr class="sticky top-0">
+<article class="table-container">
+	<table class="table table-compact overflow-visible">
+		<thead class="sticky top-0">
+			<tr>
 				<ThSort {handler} orderBy="amount">Amount</ThSort>
 				<ThSort {handler} orderBy="createdAt">Date</ThSort>
 			</tr>
