@@ -42,9 +42,9 @@
 	})
 </script>
 
-<AppBar>
+<AppBar padding="px-4">
 	<svelte:fragment slot="lead">
-		<a href="/">
+		<a class="py-4" href="/">
 			<strong class="text-xl uppercase">Coin Control</strong>
 		</a>
 	</svelte:fragment>
@@ -53,8 +53,10 @@
 			<a href="/logout" data-sveltekit-preload-data="off" data-sveltekit-reload> Logout </a>
 			<Avatar width="w-8" initials={getInitials(user.username)} />
 		{:else}
-			<a href="/signup"> Sign Up </a>
-			<a href="/login"> Login </a>
+			<div class="variant-filled btn-group">
+				<a href="/signup">Sign Up</a>
+				<a href="/login"> Login </a>
+			</div>
 		{/if}
 	</svelte:fragment>
 </AppBar>
