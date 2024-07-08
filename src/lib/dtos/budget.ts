@@ -12,3 +12,9 @@ export interface BudgetCreateDto {
 	readonly amount: number
 	readonly resetFrequency: Frequency
 }
+
+export interface BudgetEditDto {
+	readonly id: string
+	readonly amount: number
+	readonly resetFrequency: Frequency
+}

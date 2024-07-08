@@ -1,4 +1,4 @@
-import type { BudgetCreateDto, BudgetDto } from "$lib/dtos/budget"
+import type { BudgetCreateDto, BudgetDto, BudgetEditDto } from "$lib/dtos/budget"
 import { BudgetNotFoundError } from "../errors"
 import { BudgetRepository, type IBudgetRepository } from "../repositories/budgetRepository"
 import { getRandomId } from "../utils"
@@ -7,6 +7,7 @@ export interface IBudgetService {
 	getBudgetById(id: string): Promise<BudgetDto | null>
 	getBudgetsByUserId(userId: string): Promise<BudgetDto[]>
 	createBudget(payload: BudgetCreateDto): Promise<boolean>
+	editBudget(payload: BudgetEditDto): Promise<boolean>
 }
 
 export class BudgetService implements IBudgetService {
@@ -46,6 +47,21 @@ export class BudgetService implements IBudgetService {
 		} catch (error) {
 			console.error(error)
 			return false
+		}
+
+		return true
+	}
+
+	async editBudget(payload: BudgetEditDto): Promise<boolean> {
+		try {
+			await this.budgetRepository.editBudget({
+				id: payload.id,
+				amount: payload.amount,
+				resetFrequency: payload.resetFrequency
+			})
+		} catch (error) {
+			if (error instanceof BudgetNotFoundError) return false
+			throw error
 		}
 
 		return true
