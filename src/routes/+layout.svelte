@@ -1,27 +1,20 @@
 <script lang="ts">
 	import "../app.postcss"
-	import { AppBar, Avatar } from "@skeletonlabs/skeleton"
-
-	// Floating UI for Popups
-	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom"
-	import { storePopup } from "@skeletonlabs/skeleton"
-	import type { PageData } from "./$types"
+	import { AppBar, Drawer, getDrawerStore, initializeStores } from "@skeletonlabs/skeleton"
 	import { onMount } from "svelte"
-	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow })
+	import UserAvatar from "$lib/components/UserAvatar.svelte"
+	import type { PageData } from "./$types"
+	import UserDrawer from "$lib/components/UserDrawer.svelte"
 
 	export let data: PageData
 	let { user } = data
 	$: user = data.user
 
-	const getInitials = (username: string) => {
-		const names = username.split(" ")
-		const initials = names.map((name) => name[0]).join("")
-		return initials
-	}
+	initializeStores()
+	const drawerStore = getDrawerStore()
 
 	const detectSWUpdate = async () => {
 		const registration = await navigator.serviceWorker.ready
-
 		registration.addEventListener("updatefound", () => {
 			const newSW = registration.installing
 			newSW?.addEventListener("statechange", () => {
@@ -42,6 +35,12 @@
 	})
 </script>
 
+<Drawer>
+	{#if $drawerStore.id === "userMenu" && user}
+		<UserDrawer {user} />
+	{/if}
+</Drawer>
+
 <AppBar padding="px-4">
 	<svelte:fragment slot="lead">
 		<a class="py-4" href="/">
@@ -50,8 +49,7 @@
 	</svelte:fragment>
 	<svelte:fragment slot="trail">
 		{#if user !== null}
-			<a href="/logout" data-sveltekit-preload-data="off" data-sveltekit-reload> Logout </a>
-			<Avatar width="w-8" initials={getInitials(user.username)} />
+			<UserAvatar {user} />
 		{:else}
 			<div class="variant-filled btn-group">
 				<a href="/signup">Sign Up</a>

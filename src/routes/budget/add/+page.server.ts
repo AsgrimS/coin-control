@@ -7,18 +7,21 @@ import { typebox } from "sveltekit-superforms/adapters"
 
 const budgetService = new BudgetService()
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	const currentUser = locals.user
+	if (!currentUser) redirect(302, "/login")
+
 	const form = await superValidate(typebox(createBudgetSchema))
 
 	return { form }
 }
 
 export const actions: Actions = {
-	default: async (event) => {
-		const currentUser = event.locals.user
+	default: async ({ locals, request }) => {
+		const currentUser = locals.user
 		if (!currentUser) redirect(302, "/login")
 
-		const form = await superValidate(event.request, typebox(createBudgetSchema))
+		const form = await superValidate(request, typebox(createBudgetSchema))
 		if (!form.valid) return fail(400, { form })
 
 		const { amount, resetFrequency } = form.data
