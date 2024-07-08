@@ -34,6 +34,7 @@
 		"@typescript-eslint/parser": "^7.13.1",
 		"@vincjo/datatables": "^1.14.10",
 		"autoprefixer": "^10.4.19",
+		"decimal.js": "^10.4.3",
 		"drizzle-kit": "^0.22.7",
 		"drizzle-orm": "^0.31.2",
 		"eslint": "^9.5.0",

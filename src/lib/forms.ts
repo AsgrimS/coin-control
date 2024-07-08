@@ -1,4 +1,4 @@
-import { FrequencyEnum } from "./common"
+import { TypeDecimal, FrequencyEnum } from "./common"
 import { Type } from "@sinclair/typebox"
 
 export const signUpSchema = Type.Object({
@@ -13,7 +13,7 @@ export const loginSchema = Type.Object({
 })
 
 export const createBudgetSchema = Type.Object({
-	amount: Type.Integer({ minimum: 1, maximum: 1000000 }),
+	amount: TypeDecimal({ multipleOf: 0.01, minimum: 1, maximum: 1000000, default: null }),
 	resetFrequency: Type.Union(
 		[Type.Literal(FrequencyEnum.Weekly), Type.Literal(FrequencyEnum.Monthly)],
 		{ default: FrequencyEnum.Monthly }
@@ -21,7 +21,7 @@ export const createBudgetSchema = Type.Object({
 })
 
 export const createTransactionSchema = Type.Object({
-	amount: Type.Integer({ minimum: 1, maximum: 1000000, default: null })
+	amount: TypeDecimal({ multipleOf: 0.01, minimum: 1, maximum: 1000000, default: null })
 })
 
 export const deleteTransactionSchema = Type.Object({

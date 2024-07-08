@@ -30,5 +30,5 @@
 </script>
 
 <ProgressRadial value={Math.min(percentageSpent, 100)} meter={meterClass} track={trackClass}>
-	$ {spent} / {limit}
+	$ {spent.toFixed(2)} / {limit.toFixed(2)}
 </ProgressRadial>
