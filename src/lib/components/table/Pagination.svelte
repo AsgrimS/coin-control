@@ -7,6 +7,10 @@
 	const pageNumber = handler.getPageNumber()
 	const pageCount = handler.getPageCount()
 	const pages = handler.getPages({ ellipsis: true })
+
+	pageCount.subscribe((value) => {
+		if ($pageNumber > value) handler.setPage(value)
+	})
 </script>
 
 <!-- Desktop buttons -->
