@@ -57,5 +57,7 @@
 			</div>
 			<button class="variant-filled btn mt-4">Login</button>
 		</form>
+		<hr class="my-4" />
+		<a class="variant-filled btn w-full" href="/signup">Sign Up</a>
 	</div>
 </div>

@@ -66,7 +66,7 @@
 									{#if $delayed && transactionIdBeingProcessed === row.id}
 										<LoadingSpinner width="w-5" />
 									{:else}
-										<TrashIcon />
+										<TrashIcon class="text-error-500" />
 									{/if}
 								</button>
 							</form>

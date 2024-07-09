@@ -19,7 +19,7 @@
 
 <div class="mt-12 flex justify-center">
 	<div class="card inline-block p-8">
-		<form class="flex h-full flex-col" method="post" use:enhance>
+		<form class="flex flex-col" method="post" use:enhance>
 			<div class="min-h-24">
 				<label class="label">
 					<span>Username</span>
@@ -73,5 +73,7 @@
 			</div>
 			<button class="variant-filled btn mt-4">Sign Up</button>
 		</form>
+		<hr class="my-4" />
+		<a class="variant-filled btn w-full" href="/login">Login</a>
 	</div>
 </div>

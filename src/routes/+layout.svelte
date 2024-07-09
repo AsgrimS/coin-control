@@ -43,24 +43,6 @@
 	{/if}
 </Drawer>
 
-<!-- <AppBar padding="px-4"> -->
-<!-- 	<svelte:fragment slot="lead"> -->
-<!-- 		<a class="py-4" href="/"> -->
-<!-- 			<strong class="text-xl uppercase">Coin Control</strong> -->
-<!-- 		</a> -->
-<!-- 	</svelte:fragment> -->
-<!-- 	<svelte:fragment slot="trail"> -->
-<!-- 		{#if user !== null} -->
-<!-- 			<UserAvatar {user} /> -->
-<!-- 		{:else} -->
-<!-- 			<div class="variant-filled btn-group"> -->
-<!-- 				<a href="/signup">Sign Up</a> -->
-<!-- 				<a href="/login"> Login </a> -->
-<!-- 			</div> -->
-<!-- 		{/if} -->
-<!-- 	</svelte:fragment> -->
-<!-- </AppBar> -->
-<!-- Adjust for the height of the AppBar -->
 <div class="h-full p-4">
 	<slot />
 </div>

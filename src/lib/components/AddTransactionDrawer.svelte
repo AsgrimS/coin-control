@@ -33,7 +33,7 @@
 </script>
 
 <section class="flex h-full flex-col p-4 pt-1">
-	<button class="btn-icon mx-auto" on:click={() => drawerStore.close()}>
+	<button class="btn-icon mx-auto h-8 w-full" on:click={() => drawerStore.close()}>
 		<ArrowDownIcon />
 	</button>
 	<form
@@ -63,7 +63,7 @@
 			{#if $delayed}
 				<LoadingSpinner width="w-6" />
 			{:else}
-				<span>Add Transaction</span>
+				<span>Add Expense</span>
 			{/if}
 		</button>
 	</form>
