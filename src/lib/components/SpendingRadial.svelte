@@ -29,6 +29,12 @@
 	$: trackClass = getTrackColor(percentageSpent)
 </script>
 
-<ProgressRadial value={Math.min(percentageSpent, 100)} meter={meterClass} track={trackClass}>
-	$ {spent.toFixed(2)} / {limit.toFixed(2)}
+<ProgressRadial
+	strokeLinecap="butt"
+	width="w-full"
+	value={Math.min(percentageSpent, 100)}
+	meter={meterClass}
+	track={trackClass}
+>
+	{percentageSpent.toFixed(0)} %
 </ProgressRadial>

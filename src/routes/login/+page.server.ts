@@ -13,6 +13,8 @@ const userService = new UserService()
 const authService = new AuthService()
 
 export const load: PageServerLoad = async (event) => {
+	if (event.locals.user) redirect(302, "/")
+
 	const form = await superValidate(typebox(loginSchema))
 	await limiter.cookieLimiter?.preflight(event)
 

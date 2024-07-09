@@ -1,10 +1,10 @@
 <script lang="ts">
 	import "../app.postcss"
-	import { AppBar, Drawer, getDrawerStore, initializeStores } from "@skeletonlabs/skeleton"
+	import { Drawer, getDrawerStore, initializeStores } from "@skeletonlabs/skeleton"
 	import { onMount } from "svelte"
-	import UserAvatar from "$lib/components/UserAvatar.svelte"
 	import type { PageData } from "./$types"
 	import UserDrawer from "$lib/components/UserDrawer.svelte"
+	import AddTransactionDrawer from "$lib/components/AddTransactionDrawer.svelte"
 
 	export let data: PageData
 	let { user } = data
@@ -38,27 +38,29 @@
 <Drawer>
 	{#if $drawerStore.id === "userMenu" && user}
 		<UserDrawer {user} />
+	{:else if $drawerStore.id === "addTransaction"}
+		<AddTransactionDrawer />
 	{/if}
 </Drawer>
 
-<AppBar padding="px-4">
-	<svelte:fragment slot="lead">
-		<a class="py-4" href="/">
-			<strong class="text-xl uppercase">Coin Control</strong>
-		</a>
-	</svelte:fragment>
-	<svelte:fragment slot="trail">
-		{#if user !== null}
-			<UserAvatar {user} />
-		{:else}
-			<div class="variant-filled btn-group">
-				<a href="/signup">Sign Up</a>
-				<a href="/login"> Login </a>
-			</div>
-		{/if}
-	</svelte:fragment>
-</AppBar>
+<!-- <AppBar padding="px-4"> -->
+<!-- 	<svelte:fragment slot="lead"> -->
+<!-- 		<a class="py-4" href="/"> -->
+<!-- 			<strong class="text-xl uppercase">Coin Control</strong> -->
+<!-- 		</a> -->
+<!-- 	</svelte:fragment> -->
+<!-- 	<svelte:fragment slot="trail"> -->
+<!-- 		{#if user !== null} -->
+<!-- 			<UserAvatar {user} /> -->
+<!-- 		{:else} -->
+<!-- 			<div class="variant-filled btn-group"> -->
+<!-- 				<a href="/signup">Sign Up</a> -->
+<!-- 				<a href="/login"> Login </a> -->
+<!-- 			</div> -->
+<!-- 		{/if} -->
+<!-- 	</svelte:fragment> -->
+<!-- </AppBar> -->
 <!-- Adjust for the height of the AppBar -->
-<div class="h-[calc(100%_-_64px)] p-8">
+<div class="h-full p-4">
 	<slot />
 </div>

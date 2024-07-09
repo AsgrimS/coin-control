@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 }
 
 export const actions: Actions = {
-	addTransaction: async ({ params, locals, request }) => {
+	createTransaction: async ({ params, locals, request }) => {
 		const currentUser = locals.user
 		if (!currentUser) redirect(302, "/login")
 

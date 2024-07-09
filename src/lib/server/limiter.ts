@@ -15,7 +15,7 @@ export const getLimiter = (limiterId: string, rate: Rate = [3, "m"]) => {
 			name: limiterId, // Unique cookie name for this limiter
 			secret: RATE_LIMITER_SECRET,
 			rate: rate,
-			preflight: true // Require preflight call (see load function)
+			preflight: false // Require preflight call (see load function)
 		}
 	})
 }

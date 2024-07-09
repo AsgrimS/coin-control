@@ -7,10 +7,12 @@
 	import TrashIcon from "~icons/tabler/trash"
 	import { superForm, type SuperValidated } from "sveltekit-superforms"
 	import LoadingSpinner from "./LoadingSpinner.svelte"
+	import SquarePlusIcon from "~icons/tabler/square-plus"
 
 	export let transactions: TransactionDto[]
 	export let deleteFormActionName: string
 	export let deleteTransactionForm: SuperValidated<{ transactionId: string }>
+	export let onAddTransaction: () => void
 
 	let transactionIdBeingProcessed: string
 
@@ -37,10 +39,14 @@
 <article class="table-container">
 	<table class="table table-compact overflow-visible">
 		<thead class="sticky top-0">
-			<tr>
+			<tr class="[&>th]:!p-2">
 				<ThSort {handler} orderBy="amount">Amount</ThSort>
 				<ThSort {handler} orderBy="createdAt">Date</ThSort>
-				<th></th>
+				<th class="text-center">
+					<button class="variant-filled btn-icon" on:click={onAddTransaction}>
+						<SquarePlusIcon />
+					</button>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -53,7 +59,7 @@
 					<tr>
 						<td>$ {row.amount}</td>
 						<td>{dateFormatter.format(new Date(row.createdAt + " GMT"))}</td>
-						<td>
+						<td class="text-center">
 							<form method="post" action={`?/${deleteFormActionName}`} use:enhance>
 								<input type="hidden" name="transactionId" value={row.id} />
 								<button class="btn-icon w-auto" disabled={$delayed}>
@@ -72,7 +78,7 @@
 	</table>
 </article>
 
-<footer class="mt-auto flex justify-between pt-4">
+<footer class="mt-auto flex justify-between">
 	<RowCount {handler} />
 	<Pagination {handler} />
 </footer>
