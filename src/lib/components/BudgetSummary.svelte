@@ -11,17 +11,17 @@
 	<div class="flex flex-col gap-1">
 		<div class="flex flex-col">
 			<span class="font-bold">Limit:</span>
-			<span>$ {budget.amount}</span>
+			<span>$ {budget.amount.toFixed(2)}</span>
 		</div>
 
 		<div class="flex flex-col">
 			<span class="font-bold">Spent:</span>
-			<span>$ {spent}</span>
+			<span>$ {spent.toFixed(2)}</span>
 		</div>
 
 		<div class="flex flex-col">
 			<span class="font-bold">Left:</span>
-			<span>$ {leftover}</span>
+			<span>$ {leftover.toFixed(2)}</span>
 		</div>
 
 		<div class="flex flex-col">

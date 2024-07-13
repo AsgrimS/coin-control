@@ -21,7 +21,7 @@ export const createBudgetSchema = Type.Object({
 })
 
 export const createTransactionSchema = Type.Object({
-	amount: TypeDecimal({ multipleOf: 0.01, minimum: 1, maximum: 1000000, default: null })
+	amount: TypeDecimal({ multipleOf: 0.01, minimum: 0.01, maximum: 1000000, default: null })
 })
 
 export const deleteTransactionSchema = Type.Object({
