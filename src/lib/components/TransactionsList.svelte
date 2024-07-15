@@ -78,7 +78,9 @@
 	</table>
 </article>
 
-<footer class="mt-auto flex justify-between">
+<footer class="mt-auto flex min-h-12 justify-between">
 	<RowCount {handler} />
-	<Pagination {handler} />
+	<div class:hidden={transactions.length <= 10}>
+		<Pagination {handler} />
+	</div>
 </footer>
