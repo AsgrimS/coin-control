@@ -8,6 +8,7 @@
 	import { superForm, type SuperValidated } from "sveltekit-superforms"
 	import LoadingSpinner from "./LoadingSpinner.svelte"
 	import SquarePlusIcon from "~icons/tabler/square-plus"
+	import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton"
 
 	export let transactions: TransactionDto[]
 	export let deleteFormActionName: string
@@ -16,9 +17,25 @@
 
 	let transactionIdBeingProcessed: string
 
+	const modalStore = getModalStore()
+	const getConfirmation = async () =>
+		new Promise<boolean>((resolve) => {
+			const modal: ModalSettings = {
+				type: "confirm",
+				title: "Please Confirm",
+				body: "Are you sure you want to delete the transaction?",
+				buttonTextConfirm: "Delete",
+				modalClasses: "[&>footer>button:nth-child(2)]:!variant-filled-error",
+				response: (r: boolean) => resolve(r)
+			}
+			modalStore.trigger(modal)
+		}).then((confirmation) => confirmation)
+
 	const { enhance, delayed } = superForm(deleteTransactionForm, {
-		onSubmit({ formData }) {
+		async onSubmit({ formData, cancel }) {
 			transactionIdBeingProcessed = String(formData.get("transactionId"))
+			const confirmation = await getConfirmation()
+			if (!confirmation) cancel()
 		}
 	})
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "../app.postcss"
-	import { Drawer, getDrawerStore, initializeStores } from "@skeletonlabs/skeleton"
+	import { Drawer, getDrawerStore, initializeStores, Modal } from "@skeletonlabs/skeleton"
 	import { onMount } from "svelte"
 	import type { PageData } from "./$types"
 	import UserDrawer from "$lib/components/UserDrawer.svelte"
@@ -42,6 +42,8 @@
 		<AddTransactionDrawer />
 	{/if}
 </Drawer>
+
+<Modal />
 
 <div class="h-full p-4">
 	<slot />
