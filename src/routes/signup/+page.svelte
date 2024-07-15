@@ -74,6 +74,9 @@
 			<button class="variant-filled btn mt-4">Sign Up</button>
 		</form>
 		<hr class="my-4" />
-		<a class="variant-filled btn w-full" href="/login">Login</a>
+
+		<p class="text-surface-400">
+			Already have an account?<a class="anchor ml-2" href="/login">Login</a>
+		</p>
 	</div>
 </div>
