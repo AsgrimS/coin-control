@@ -28,7 +28,7 @@
 
 <section class="container mx-auto flex h-full flex-col gap-4">
 	<div class="card flex items-center justify-between">
-		<h3 class="h3 ml-4">Name</h3>
+		<h3 class="h3 ml-4">{data.budget.name}</h3>
 		<UserMenuButton />
 	</div>
 

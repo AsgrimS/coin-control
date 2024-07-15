@@ -22,7 +22,10 @@ export const budgetTable = sqliteTable("budget", {
 		.notNull()
 		.references(() => userTable.id),
 	amount: real("amount").notNull(),
-	resetFrequency: text("reset_frequency", { enum: frequency }).notNull()
+	resetFrequency: text("reset_frequency", { enum: frequency }).notNull(),
+	name: text("name", {
+		length: 22
+	}).notNull()
 })
 
 export const transactionTable = sqliteTable("transaction", {

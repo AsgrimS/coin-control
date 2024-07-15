@@ -42,7 +42,8 @@ export class BudgetService implements IBudgetService {
 				id: getRandomId(),
 				userId: payload.userId,
 				amount: payload.amount,
-				resetFrequency: payload.resetFrequency
+				resetFrequency: payload.resetFrequency,
+				name: payload.name
 			})
 		} catch (error) {
 			console.error(error)

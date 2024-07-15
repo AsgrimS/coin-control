@@ -20,6 +20,23 @@
 		<form class="flex h-full flex-col" method="post" use:enhance>
 			<div class="min-h-24">
 				<label class="label">
+					<span>Name</span>
+					<input
+						class="input"
+						class:input-error={$errors.name}
+						type="text"
+						name="name"
+						aria-invalid={$errors.name ? "true" : undefined}
+						bind:value={$form.name}
+						{...$constraints.name}
+					/>
+				</label>
+				{#if $errors.name}
+					<FormError message={$errors.name} />
+				{/if}
+			</div>
+			<div class="min-h-24">
+				<label class="label">
 					<span>Amount</span>
 					<input
 						class="input"

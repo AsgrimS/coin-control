@@ -2,7 +2,7 @@ import { createTransactionSchema, deleteTransactionSchema } from "$lib/forms"
 import { BudgetService } from "$lib/server/services/budgetService"
 import { TransactionService } from "$lib/server/services/transactionService"
 import type { Actions, PageServerLoad } from "./$types"
-import { error, fail, redirect } from "@sveltejs/kit"
+import { fail, redirect } from "@sveltejs/kit"
 import { superValidate } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
 
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const budget = await budgetService.getBudgetById(params.budgetId)
 
-	if (!budget || budget.userId !== user.id) error(404, "Budget not found")
+	if (!budget || budget.userId !== user.id) redirect(302, "/")
 
 	const transactions = await transactionService.getTransactionsByBudgetId(params.budgetId)
 

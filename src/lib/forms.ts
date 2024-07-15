@@ -13,6 +13,7 @@ export const loginSchema = Type.Object({
 })
 
 export const createBudgetSchema = Type.Object({
+	name: Type.String({ minLength: 1, maxLength: 22 }),
 	amount: TypeDecimal({ multipleOf: 0.01, minimum: 1, maximum: 1000000, default: null }),
 	resetFrequency: Type.Union(
 		[Type.Literal(FrequencyEnum.Weekly), Type.Literal(FrequencyEnum.Monthly)],

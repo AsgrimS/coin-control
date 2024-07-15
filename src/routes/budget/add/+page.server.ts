@@ -24,12 +24,13 @@ export const actions: Actions = {
 		const form = await superValidate(request, typebox(createBudgetSchema))
 		if (!form.valid) return fail(400, { form })
 
-		const { amount, resetFrequency } = form.data
+		const { amount, resetFrequency, name } = form.data
 
 		const isBudgetCreated = await budgetService.createBudget({
 			userId: currentUser.id,
 			amount,
-			resetFrequency
+			resetFrequency,
+			name
 		})
 
 		if (!isBudgetCreated) {

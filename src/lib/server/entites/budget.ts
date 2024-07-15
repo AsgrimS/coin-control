@@ -6,22 +6,26 @@ export class BudgetEntity {
 	readonly userId: string
 	readonly amount: number
 	readonly resetFrequency: Frequency
+	readonly name: string
 
 	constructor({
 		id,
 		userId,
 		amount,
-		resetFrequency
+		resetFrequency,
+		name
 	}: {
 		id: string
 		userId: string
 		amount: number
 		resetFrequency: Frequency
+		name: string
 	}) {
 		this.id = id
 		this.userId = userId
 		this.amount = amount
 		this.resetFrequency = resetFrequency
+		this.name = name
 	}
 
 	toDTO(): BudgetDto {
@@ -29,7 +33,8 @@ export class BudgetEntity {
 			id: this.id,
 			userId: this.userId,
 			amount: this.amount,
-			resetFrequency: this.resetFrequency
+			resetFrequency: this.resetFrequency,
+			name: this.name
 		}
 	}
 }

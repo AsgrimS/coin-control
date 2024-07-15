@@ -2,7 +2,7 @@ import { db } from "../db"
 import { userTable } from "../db/schema"
 import { UserEntity } from "../entites/user"
 import { UserAlreadyExistsError, UserNotFoundError } from "../errors"
-import { sql } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 
 type CreateUserPayload = {
 	username: string
@@ -47,10 +47,7 @@ export class UserRepository implements IUserRepository {
 		})
 	}
 	async getUserById(id: string): Promise<UserEntity> {
-		const [existingUser] = await db
-			.select()
-			.from(userTable)
-			.where(sql`${userTable.id} = ${id}`)
+		const [existingUser] = await db.select().from(userTable).where(eq(userTable.id, id))
 
 		if (!existingUser) throw new UserNotFoundError()
 
