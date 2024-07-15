@@ -7,7 +7,7 @@
 
 	const drawerStore = getDrawerStore()
 
-	type CreateTransactionForm = SuperValidated<{ amount: number }>
+	type CreateTransactionForm = SuperValidated<{ amount: number; title: string | null }>
 
 	const { form, errors, constraints, enhance, delayed } = superForm(
 		$drawerStore.meta.createTransactionForm as CreateTransactionForm,
@@ -57,6 +57,26 @@
 					bind:this={amountInputRef}
 					{...$constraints.amount}
 				/>
+			</label>
+		</div>
+		<div class="min-h-24">
+			<label class="label">
+				<span class="">
+					Title <span class="text-surface-400">
+						(optional)
+						<span />
+					</span>
+					<input
+						disabled={$delayed}
+						class="input"
+						class:input-error={$errors.title}
+						type="text"
+						name="title"
+						aria-invalid={$errors.title ? "true" : undefined}
+						bind:value={$form.title}
+						{...$constraints.title}
+					/>
+				</span>
 			</label>
 		</div>
 		<button disabled={$delayed} class="variant-filled btn mt-auto">

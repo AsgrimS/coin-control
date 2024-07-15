@@ -39,5 +39,6 @@ export const transactionTable = sqliteTable("transaction", {
 	amount: real("amount").notNull(),
 	createdAt: text("created_at")
 		.notNull()
-		.default(sql`(current_timestamp)`)
+		.default(sql`(current_timestamp)`),
+	title: text("title", { length: 64 })
 })

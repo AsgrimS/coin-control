@@ -9,6 +9,7 @@ type CreateTransactionPayload = {
 	userId: string
 	budgetId: string
 	amount: number
+	title: string | null
 }
 
 export interface ITransactionRepository {
@@ -33,7 +34,8 @@ export class TransactionRepository implements ITransactionRepository {
 			userId: transaction.userId,
 			budgetId: transaction.budgetId,
 			createdAt: transaction.createdAt,
-			amount: transaction.amount
+			amount: transaction.amount,
+			title: transaction.title
 		})
 	}
 
@@ -51,7 +53,8 @@ export class TransactionRepository implements ITransactionRepository {
 					userId: transaction.userId,
 					budgetId: transaction.budgetId,
 					createdAt: transaction.createdAt,
-					amount: transaction.amount
+					amount: transaction.amount,
+					title: transaction.title
 				})
 		)
 	}
@@ -70,19 +73,21 @@ export class TransactionRepository implements ITransactionRepository {
 					userId: transaction.userId,
 					budgetId: transaction.budgetId,
 					createdAt: transaction.createdAt,
-					amount: transaction.amount
+					amount: transaction.amount,
+					title: transaction.title
 				})
 		)
 	}
 
 	async createTransaction(payload: CreateTransactionPayload): Promise<void> {
-		const { id, userId, budgetId, amount } = payload
+		const { id, userId, budgetId, amount, title } = payload
 
 		await db.insert(transactionTable).values({
 			id,
 			userId,
 			budgetId,
-			amount
+			amount,
+			title
 		})
 	}
 

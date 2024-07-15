@@ -52,7 +52,8 @@ export class TransactionService implements ITransactionService {
 				id: getRandomId(),
 				budgetId: payload.budgetId,
 				userId: payload.userId,
-				amount: payload.amount
+				amount: payload.amount,
+				title: payload.title
 			})
 		} catch (error) {
 			console.error(error)

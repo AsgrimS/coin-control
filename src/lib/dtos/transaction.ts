@@ -4,10 +4,12 @@ export interface TransactionDto {
 	readonly budgetId: string
 	readonly amount: number
 	readonly createdAt: string
+	readonly title: string | null
 }
 
 export interface TransactionCreateDto {
 	readonly userId: string
 	readonly budgetId: string
 	readonly amount: number
+	readonly title: string | null
 }

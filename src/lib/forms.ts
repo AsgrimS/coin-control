@@ -1,4 +1,4 @@
-import { TypeDecimal, FrequencyEnum } from "./common"
+import { TypeDecimal, FrequencyEnum, Nullable } from "./common"
 import { Type } from "@sinclair/typebox"
 
 export const signUpSchema = Type.Object({
@@ -22,7 +22,8 @@ export const createBudgetSchema = Type.Object({
 })
 
 export const createTransactionSchema = Type.Object({
-	amount: TypeDecimal({ multipleOf: 0.01, minimum: 0.01, maximum: 1000000, default: null })
+	amount: TypeDecimal({ multipleOf: 0.01, minimum: 0.01, maximum: 1000000, default: null }),
+	title: Nullable(Type.String({ maxLength: 64, default: null }))
 })
 
 export const deleteTransactionSchema = Type.Object({

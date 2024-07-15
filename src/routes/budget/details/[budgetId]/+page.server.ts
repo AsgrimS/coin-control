@@ -1,3 +1,4 @@
+import { getTrimmedOrNull } from "$lib/common"
 import { createTransactionSchema, deleteTransactionSchema } from "$lib/forms"
 import { BudgetService } from "$lib/server/services/budgetService"
 import { TransactionService } from "$lib/server/services/transactionService"
@@ -39,12 +40,13 @@ export const actions: Actions = {
 		const form = await superValidate(request, typebox(createTransactionSchema))
 		if (!form.valid) return fail(400, { form })
 
-		const { amount } = form.data
+		const { amount, title } = form.data
 
 		const isTransactionCreated = await transactionService.createTransaction({
 			userId: currentUser.id,
 			budgetId: params.budgetId,
-			amount
+			amount,
+			title: getTrimmedOrNull(title)
 		})
 
 		if (!isTransactionCreated) {

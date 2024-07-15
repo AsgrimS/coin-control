@@ -7,7 +7,9 @@
 <aside class="mr-6 text-sm leading-8">
 	{#if $rowCount.total > 0}
 		<b>{$rowCount.start}</b>
-		- <b>{$rowCount.end}</b>
-		/ <b>{$rowCount.total}</b>
+		-
+		<b>{$rowCount.end}</b>
+		/
+		<b>{$rowCount.total}</b>
 	{/if}
 </aside>

@@ -11,7 +11,10 @@
 <div class="container mx-auto flex h-full items-center justify-center">
 	{#if budgets.length === 0}
 		<div class="flex flex-col items-center gap-1 text-center">
-			<p class="text-xl">No budgets to display. <br /> Click below to create a new one.</p>
+			<p class="text-xl">
+				No budgets to display. <br />
+				Click below to create a new one.
+			</p>
 			<CreateBudgetButton />
 		</div>
 	{:else}

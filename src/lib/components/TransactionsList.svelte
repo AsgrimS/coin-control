@@ -23,7 +23,7 @@
 			const modal: ModalSettings = {
 				type: "confirm",
 				title: "Please Confirm",
-				body: "Are you sure you want to delete the transaction?",
+				body: "Are you sure you want to delete this transaction?",
 				buttonTextConfirm: "Delete",
 				modalClasses: "[&>footer>button:nth-child(2)]:!variant-filled-error",
 				response: (r: boolean) => resolve(r)
@@ -40,11 +40,8 @@
 	})
 
 	const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-		year: "numeric",
 		month: "long",
-		day: "numeric",
-		hour: "numeric",
-		minute: "numeric"
+		day: "numeric"
 	})
 
 	const handler = new DataHandler(transactions, { rowsPerPage: 10 })
@@ -58,6 +55,7 @@
 		<thead class="sticky top-0">
 			<tr class="[&>th]:!p-2">
 				<ThSort {handler} orderBy="amount">Amount</ThSort>
+				<th>Title</th>
 				<ThSort {handler} orderBy="createdAt">Date</ThSort>
 				<th class="text-center">
 					<button class="variant-filled btn-icon" on:click={onAddTransaction}>
@@ -75,9 +73,17 @@
 				{#each $rows as row}
 					<tr>
 						<td>$ {row.amount}</td>
+						<td class="max-w-36 overflow-hidden text-ellipsis whitespace-nowrap">
+							{row.title || ""}
+						</td>
 						<td>{dateFormatter.format(new Date(row.createdAt + " GMT"))}</td>
 						<td class="text-center">
-							<form method="post" action={`?/${deleteFormActionName}`} use:enhance>
+							<form
+								class="flex justify-center"
+								method="post"
+								action={`?/${deleteFormActionName}`}
+								use:enhance
+							>
 								<input type="hidden" name="transactionId" value={row.id} />
 								<button class="btn-icon w-auto" disabled={$delayed}>
 									{#if $delayed && transactionIdBeingProcessed === row.id}

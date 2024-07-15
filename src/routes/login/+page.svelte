@@ -59,7 +59,8 @@
 		</form>
 		<hr class="my-4" />
 		<p class="text-surface-400">
-			Without an account?<a class="anchor ml-2" href="/signup">Sign Up</a>
+			Without an account?
+			<a class="anchor ml-2" href="/signup">Sign Up</a>
 		</p>
 	</div>
 </div>

@@ -76,7 +76,8 @@
 		<hr class="my-4" />
 
 		<p class="text-surface-400">
-			Already have an account?<a class="anchor ml-2" href="/login">Login</a>
+			Already have an account?
+			<a class="anchor ml-2" href="/login">Login</a>
 		</p>
 	</div>
 </div>
