@@ -26,7 +26,6 @@
 		minute: "numeric"
 	})
 
-	console.log(modalCss)
 </script>
 
 {#if transaction}
