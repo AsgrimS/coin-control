@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { getDateFormatter } from "$lib/common"
 	import type { BudgetDto } from "$lib/dtos/budget"
 
 	export let budget: BudgetDto
 	export let spent: number
+
+	const dateFormatter = getDateFormatter("short")
 
 	$: leftover = budget.amount - spent
 </script>
@@ -26,7 +29,7 @@
 
 		<div class="flex flex-col">
 			<span class="font-bold">Resets:</span>
-			<span>{budget.resetFrequency}</span>
+			<span>{dateFormatter.format(budget.nextReset)}</span>
 		</div>
 	</div>
 </div>

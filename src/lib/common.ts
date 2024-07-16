@@ -47,3 +47,26 @@ export const getTrimmedOrNull = (value: string | null) => {
 	if (trimmed.length === 0) return null
 	return trimmed
 }
+
+export const getDateFormatter = (variant: "short" | "long") => {
+	let format: Intl.DateTimeFormatOptions = {}
+
+	if (variant === "short") {
+		format = {
+			month: "short",
+			day: "numeric"
+		}
+	}
+
+	if (variant === "long") {
+		format = {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+			hour: "numeric",
+			minute: "numeric"
+		}
+	}
+
+	return new Intl.DateTimeFormat("en-GB", format)
+}

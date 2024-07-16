@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getModalStore } from "@skeletonlabs/skeleton"
 	import type { TransactionDto } from "$lib/dtos/transaction"
+	import { getDateFormatter } from "$lib/common"
 
 	export let parent
 
@@ -18,13 +19,7 @@
 	const modalStore = getModalStore()
 	$: transaction = $modalStore[0]?.meta.transaction as TransactionDto | undefined
 
-	const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-		hour: "numeric",
-		minute: "numeric"
-	})
+	const dateFormatter = getDateFormatter("long")
 </script>
 
 {#if transaction}

@@ -9,6 +9,7 @@
 	import LoadingSpinner from "./LoadingSpinner.svelte"
 	import SquarePlusIcon from "~icons/tabler/square-plus"
 	import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton"
+	import { getDateFormatter } from "$lib/common"
 
 	export let transactions: TransactionDto[]
 	export let deleteFormActionName: string
@@ -48,10 +49,7 @@
 		})
 	}
 
-	const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-		month: "long",
-		day: "numeric"
-	})
+	const dateFormatter = getDateFormatter("short")
 
 	const handler = new DataHandler(transactions, { rowsPerPage: 10 })
 	const rows = handler.getRows()
