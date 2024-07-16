@@ -2,7 +2,7 @@ import { db } from "../db"
 import { transactionTable } from "../db/schema"
 import { TransactionEntity } from "../entites/transaction"
 import { TransactionNotFoundError } from "../errors"
-import { desc, eq } from "drizzle-orm"
+import { and, desc, eq, gte } from "drizzle-orm"
 
 type CreateTransactionPayload = {
 	id: string
@@ -13,10 +13,15 @@ type CreateTransactionPayload = {
 	createdAt: Date
 }
 
+type GetTransactionsByBudgetIdPayload = {
+	budgetId: string
+	newerThanEqual?: Date
+}
+
 export interface ITransactionRepository {
 	getTransactionById(id: string): Promise<TransactionEntity>
 	getTransactionsByUserId(userId: string): Promise<TransactionEntity[]>
-	getTransactionsByBudgetId(budgetId: string): Promise<TransactionEntity[]>
+	getTransactionsByBudgetId(payload: GetTransactionsByBudgetIdPayload): Promise<TransactionEntity[]>
 	createTransaction(payload: CreateTransactionPayload): Promise<void>
 	deleteTransaction(id: string): Promise<void>
 }
@@ -31,12 +36,8 @@ export class TransactionRepository implements ITransactionRepository {
 		if (!transaction) throw new TransactionNotFoundError()
 
 		return new TransactionEntity({
-			id: transaction.id,
-			userId: transaction.userId,
-			budgetId: transaction.budgetId,
-			createdAt: new Date(transaction.createdAt),
-			amount: transaction.amount,
-			title: transaction.title
+			...transaction,
+			createdAt: new Date(transaction.createdAt)
 		})
 	}
 
@@ -50,46 +51,43 @@ export class TransactionRepository implements ITransactionRepository {
 		return transactions.map(
 			(transaction) =>
 				new TransactionEntity({
-					id: transaction.id,
-					userId: transaction.userId,
-					budgetId: transaction.budgetId,
-					createdAt: new Date(transaction.createdAt),
-					amount: transaction.amount,
-					title: transaction.title
+					...transaction,
+					createdAt: new Date(transaction.createdAt)
 				})
 		)
 	}
 
-	async getTransactionsByBudgetId(budgetId: string): Promise<TransactionEntity[]> {
+	async getTransactionsByBudgetId(
+		payload: GetTransactionsByBudgetIdPayload
+	): Promise<TransactionEntity[]> {
+		const { budgetId, newerThanEqual } = payload
+
 		const transactions = await db
 			.select()
 			.from(transactionTable)
-			.where(eq(transactionTable.budgetId, budgetId))
+			.where(
+				and(
+					eq(transactionTable.budgetId, budgetId),
+					newerThanEqual && gte(transactionTable.createdAt, newerThanEqual.toISOString())
+				)
+			)
 			.orderBy(desc(transactionTable.createdAt))
 
 		return transactions.map(
 			(transaction) =>
 				new TransactionEntity({
-					id: transaction.id,
-					userId: transaction.userId,
-					budgetId: transaction.budgetId,
-					createdAt: new Date(transaction.createdAt),
-					amount: transaction.amount,
-					title: transaction.title
+					...transaction,
+					createdAt: new Date(transaction.createdAt)
 				})
 		)
 	}
 
 	async createTransaction(payload: CreateTransactionPayload): Promise<void> {
-		const { id, userId, budgetId, amount, title } = payload
+		const { createdAt } = payload
 
 		await db.insert(transactionTable).values({
-			id,
-			userId,
-			budgetId,
-			amount,
-			title,
-			createdAt: payload.createdAt.toISOString()
+			...payload,
+			createdAt: createdAt.toISOString()
 		})
 	}
 

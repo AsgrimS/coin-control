@@ -15,11 +15,28 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	if (!user) redirect(302, "/login")
 
-	const budget = await budgetService.getBudgetById(params.budgetId)
+	let budget = await budgetService.getBudgetById(params.budgetId)
 
 	if (!budget || budget.userId !== user.id) redirect(302, "/")
 
-	const transactions = await transactionService.getTransactionsByBudgetId(params.budgetId)
+	if (budget.nextReset < new Date()) {
+		await budgetService.refreshNextResetDate(budget.id)
+		budget = await budgetService.getBudgetById(params.budgetId)
+	}
+
+	if (!budget) redirect(302, "/")
+
+	const transactionsDateRange = new Date(budget.nextReset)
+	if (budget.resetFrequency === "monthly") {
+		transactionsDateRange.setMonth(transactionsDateRange.getMonth() - 1)
+	} else if (budget.resetFrequency === "weekly") {
+		transactionsDateRange.setDate(transactionsDateRange.getDate() - 7)
+	}
+
+	const transactions = await transactionService.getTransactionsByBudgetId({
+		budgetId: params.budgetId,
+		newerThanEqual: transactionsDateRange
+	})
 
 	const createTransactionForm = await superValidate(typebox(createTransactionSchema))
 	const removeTransactionForm = await superValidate(typebox(deleteTransactionSchema))

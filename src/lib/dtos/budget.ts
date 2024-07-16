@@ -21,4 +21,5 @@ export interface BudgetEditDto {
 	readonly amount: number
 	readonly resetFrequency: Frequency
 	readonly name: string
+	readonly nextReset: Date
 }

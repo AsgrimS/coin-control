@@ -8,6 +8,7 @@ export interface IBudgetService {
 	getBudgetsByUserId(userId: string): Promise<BudgetDto[]>
 	createBudget(payload: BudgetCreateDto): Promise<boolean>
 	editBudget(payload: BudgetEditDto): Promise<boolean>
+	refreshNextResetDate(budgetId: string): Promise<boolean>
 }
 
 export class BudgetService implements IBudgetService {
@@ -43,11 +44,8 @@ export class BudgetService implements IBudgetService {
 
 		try {
 			await this.budgetRepository.createBudget({
+				...payload,
 				id: getRandomId(),
-				userId: payload.userId,
-				amount: payload.amount,
-				resetFrequency: payload.resetFrequency,
-				name: payload.name,
 				nextReset
 			})
 		} catch (error) {
@@ -61,9 +59,38 @@ export class BudgetService implements IBudgetService {
 	async editBudget(payload: BudgetEditDto): Promise<boolean> {
 		try {
 			await this.budgetRepository.editBudget({
-				id: payload.id,
-				amount: payload.amount,
-				resetFrequency: payload.resetFrequency
+				...payload
+			})
+		} catch (error) {
+			if (error instanceof BudgetNotFoundError) return false
+			throw error
+		}
+
+		return true
+	}
+
+	async refreshNextResetDate(budgetId: string): Promise<boolean> {
+		let budget
+
+		try {
+			budget = await this.budgetRepository.getBudgetById(budgetId)
+		} catch (error) {
+			if (error instanceof BudgetNotFoundError) return false
+			throw error
+		}
+
+		const now = new Date()
+		const newNextReset = new Date(budget.nextReset)
+
+		while (newNextReset < now) {
+			if (budget.resetFrequency === "weekly") newNextReset.setDate(newNextReset.getDate() + 7)
+			if (budget.resetFrequency === "monthly") newNextReset.setMonth(newNextReset.getMonth() + 1)
+		}
+
+		try {
+			await this.budgetRepository.editBudget({
+				...budget,
+				nextReset: newNextReset
 			})
 		} catch (error) {
 			if (error instanceof BudgetNotFoundError) return false

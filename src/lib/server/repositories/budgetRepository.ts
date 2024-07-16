@@ -18,6 +18,7 @@ type EditBudgetPayload = {
 	id: string
 	amount: number
 	resetFrequency: Frequency
+	nextReset: Date
 }
 
 export interface IBudgetRepository {
@@ -34,11 +35,7 @@ export class BudgetRepository implements IBudgetRepository {
 		if (!budget) throw new BudgetNotFoundError()
 
 		return new BudgetEntity({
-			id: budget.id,
-			userId: budget.userId,
-			amount: budget.amount,
-			resetFrequency: budget.resetFrequency,
-			name: budget.name,
+			...budget,
 			nextReset: new Date(budget.nextReset)
 		})
 	}
@@ -49,36 +46,29 @@ export class BudgetRepository implements IBudgetRepository {
 		return budgets.map(
 			(budget) =>
 				new BudgetEntity({
-					id: budget.id,
-					userId: budget.userId,
-					amount: budget.amount,
-					resetFrequency: budget.resetFrequency,
-					name: budget.name,
+					...budget,
 					nextReset: new Date(budget.nextReset)
 				})
 		)
 	}
 
 	async createBudget(payload: CreateBudgetPayload): Promise<void> {
-		const { id, userId, amount, resetFrequency, name, nextReset } = payload
+		const { nextReset } = payload
 		await db.insert(budgetTable).values({
-			id,
-			userId,
-			amount,
-			resetFrequency,
-			name,
+			...payload,
 			nextReset: nextReset.toISOString()
 		})
 	}
 
 	async editBudget(payload: EditBudgetPayload): Promise<void> {
-		const { id, amount, resetFrequency } = payload
+		const { id, amount, resetFrequency, nextReset } = payload
 
 		const updateOperation = await db
 			.update(budgetTable)
 			.set({
 				amount,
-				resetFrequency
+				resetFrequency,
+				nextReset: nextReset.toISOString()
 			})
 			.where(eq(budgetTable.id, id))
 

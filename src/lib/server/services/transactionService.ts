@@ -1,4 +1,8 @@
-import type { TransactionCreateDto, TransactionDto } from "$lib/dtos/transaction"
+import type {
+	TransactionByBudgetIdDto,
+	TransactionCreateDto,
+	TransactionDto
+} from "$lib/dtos/transaction"
 import { TransactionNotFoundError } from "../errors"
 import {
 	TransactionRepository,
@@ -9,7 +13,7 @@ import { getRandomId } from "../utils"
 export interface ITransactionService {
 	getTransactionById(id: string): Promise<TransactionDto | null>
 	getTransactionsByUserId(userId: string): Promise<TransactionDto[]>
-	getTransactionsByBudgetId(budgetId: string): Promise<TransactionDto[]>
+	getTransactionsByBudgetId(payload: TransactionByBudgetIdDto): Promise<TransactionDto[]>
 	createTransaction(payload: TransactionCreateDto): Promise<boolean>
 	deleteTransaction(id: string): Promise<boolean>
 }
@@ -40,8 +44,8 @@ export class TransactionService implements ITransactionService {
 		return transactions.map((transaction) => transaction.toDTO())
 	}
 
-	async getTransactionsByBudgetId(budgetId: string): Promise<TransactionDto[]> {
-		const transactions = await this.transactionRepository.getTransactionsByBudgetId(budgetId)
+	async getTransactionsByBudgetId(payload: TransactionByBudgetIdDto): Promise<TransactionDto[]> {
+		const transactions = await this.transactionRepository.getTransactionsByBudgetId(payload)
 
 		return transactions.map((transaction) => transaction.toDTO())
 	}
@@ -49,11 +53,8 @@ export class TransactionService implements ITransactionService {
 	async createTransaction(payload: TransactionCreateDto): Promise<boolean> {
 		try {
 			await this.transactionRepository.createTransaction({
+				...payload,
 				id: getRandomId(),
-				budgetId: payload.budgetId,
-				userId: payload.userId,
-				amount: payload.amount,
-				title: payload.title,
 				createdAt: new Date()
 			})
 		} catch (error) {

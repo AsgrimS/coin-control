@@ -18,9 +18,7 @@ export class UserService implements IUserService {
 	async createUser(payload: UserCreateDto): Promise<boolean> {
 		try {
 			await this.userRepository.createUser({
-				id: payload.id,
-				username: payload.username,
-				hashedPassword: payload.hashedPassword
+				...payload
 			})
 		} catch (error) {
 			if (error instanceof UserAlreadyExistsError) return false

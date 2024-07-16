@@ -13,3 +13,8 @@ export interface TransactionCreateDto {
 	readonly amount: number
 	readonly title: string | null
 }
+
+export interface TransactionByBudgetIdDto {
+	readonly budgetId: string
+	readonly newerThanEqual?: Date
+}
