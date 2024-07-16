@@ -15,8 +15,8 @@
 	</div>
 	<hr class="mb-4 mt-1" />
 	<div class="flex flex-col gap-4">
-		<button class="variant-filled btn">Edit Budget</button>
-		<button class="variant-filled btn">Create New Budget</button>
+		<button disabled class="variant-filled btn">Edit Budget</button>
+		<button disabled class="variant-filled btn">Create New Budget</button>
 	</div>
 	<hr class="my-2 mt-auto" />
 	<a
