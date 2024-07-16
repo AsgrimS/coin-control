@@ -18,7 +18,8 @@
 	let transactionIdBeingProcessed: string
 
 	const modalStore = getModalStore()
-	const getConfirmation = async () =>
+
+	const getTransactionDeleteConfirmation = async () =>
 		new Promise<boolean>((resolve) => {
 			const modal: ModalSettings = {
 				type: "confirm",
@@ -34,10 +35,18 @@
 	const { enhance, delayed } = superForm(deleteTransactionForm, {
 		async onSubmit({ formData, cancel }) {
 			transactionIdBeingProcessed = String(formData.get("transactionId"))
-			const confirmation = await getConfirmation()
+			const confirmation = await getTransactionDeleteConfirmation()
 			if (!confirmation) cancel()
 		}
 	})
+
+	const triggerTransactionDetailsModal = (transaction: TransactionDto) => {
+		modalStore.trigger({
+			type: "component",
+			component: "transactionDetails",
+			meta: { transaction }
+		})
+	}
 
 	const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 		month: "long",
@@ -51,7 +60,7 @@
 </script>
 
 <article class="table-container">
-	<table class="table table-compact overflow-visible">
+	<table class="table table-compact overflow-visible" class:table-hover={$rows.length !== 0}>
 		<thead class="sticky top-0">
 			<tr class="[&>th]:!p-2">
 				<ThSort {handler} orderBy="amount">Amount</ThSort>
@@ -71,13 +80,18 @@
 				</tr>
 			{:else}
 				{#each $rows as row}
-					<tr>
-						<td>$ {row.amount}</td>
-						<td class="max-w-36 overflow-hidden text-ellipsis whitespace-nowrap">
+					<tr class="cursor-pointer">
+						<td on:click={() => triggerTransactionDetailsModal(row)}>$ {row.amount}</td>
+						<td
+							class="max-w-36 overflow-hidden text-ellipsis whitespace-nowrap"
+							on:click={() => triggerTransactionDetailsModal(row)}
+						>
 							{row.title || ""}
 						</td>
-						<td>{dateFormatter.format(new Date(row.createdAt + " GMT"))}</td>
-						<td class="text-center">
+						<td on:click={() => triggerTransactionDetailsModal(row)}>
+							{dateFormatter.format(new Date(row.createdAt + " GMT"))}
+						</td>
+						<td class="cursor-default text-center">
 							<form
 								class="flex justify-center"
 								method="post"

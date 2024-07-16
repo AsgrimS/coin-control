@@ -1,10 +1,17 @@
 <script lang="ts">
 	import "../app.postcss"
-	import { Drawer, getDrawerStore, initializeStores, Modal } from "@skeletonlabs/skeleton"
+	import {
+		Drawer,
+		getDrawerStore,
+		initializeStores,
+		Modal,
+		type ModalComponent
+	} from "@skeletonlabs/skeleton"
 	import { onMount } from "svelte"
 	import type { PageData } from "./$types"
 	import UserDrawer from "$lib/components/UserDrawer.svelte"
 	import AddTransactionDrawer from "$lib/components/AddTransactionDrawer.svelte"
+	import TransactionDetailsModal from "$lib/components/TransactionDetailsModal.svelte"
 
 	export let data: PageData
 	let { user } = data
@@ -12,6 +19,10 @@
 
 	initializeStores()
 	const drawerStore = getDrawerStore()
+
+	const modalRegistry: Record<string, ModalComponent> = {
+		transactionDetails: { ref: TransactionDetailsModal }
+	}
 
 	const detectSWUpdate = async () => {
 		const registration = await navigator.serviceWorker.ready
@@ -43,7 +54,7 @@
 	{/if}
 </Drawer>
 
-<Modal />
+<Modal components={modalRegistry} />
 
 <div class="h-full p-4">
 	<slot />
