@@ -37,13 +37,18 @@ export class BudgetService implements IBudgetService {
 	}
 
 	async createBudget(payload: BudgetCreateDto): Promise<boolean> {
+		const nextReset = new Date()
+		if (payload.resetFrequency === "weekly") nextReset.setDate(nextReset.getDate() + 7)
+		if (payload.resetFrequency === "monthly") nextReset.setMonth(nextReset.getMonth() + 1)
+
 		try {
 			await this.budgetRepository.createBudget({
 				id: getRandomId(),
 				userId: payload.userId,
 				amount: payload.amount,
 				resetFrequency: payload.resetFrequency,
-				name: payload.name
+				name: payload.name,
+				nextReset
 			})
 		} catch (error) {
 			console.error(error)

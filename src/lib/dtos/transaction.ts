@@ -3,7 +3,7 @@ export interface TransactionDto {
 	readonly userId: string
 	readonly budgetId: string
 	readonly amount: number
-	readonly createdAt: string
+	readonly createdAt: Date
 	readonly title: string | null
 }
 

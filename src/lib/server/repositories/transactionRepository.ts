@@ -10,6 +10,7 @@ type CreateTransactionPayload = {
 	budgetId: string
 	amount: number
 	title: string | null
+	createdAt: Date
 }
 
 export interface ITransactionRepository {
@@ -33,7 +34,7 @@ export class TransactionRepository implements ITransactionRepository {
 			id: transaction.id,
 			userId: transaction.userId,
 			budgetId: transaction.budgetId,
-			createdAt: transaction.createdAt,
+			createdAt: new Date(transaction.createdAt),
 			amount: transaction.amount,
 			title: transaction.title
 		})
@@ -52,7 +53,7 @@ export class TransactionRepository implements ITransactionRepository {
 					id: transaction.id,
 					userId: transaction.userId,
 					budgetId: transaction.budgetId,
-					createdAt: transaction.createdAt,
+					createdAt: new Date(transaction.createdAt),
 					amount: transaction.amount,
 					title: transaction.title
 				})
@@ -72,7 +73,7 @@ export class TransactionRepository implements ITransactionRepository {
 					id: transaction.id,
 					userId: transaction.userId,
 					budgetId: transaction.budgetId,
-					createdAt: transaction.createdAt,
+					createdAt: new Date(transaction.createdAt),
 					amount: transaction.amount,
 					title: transaction.title
 				})
@@ -87,7 +88,8 @@ export class TransactionRepository implements ITransactionRepository {
 			userId,
 			budgetId,
 			amount,
-			title
+			title,
+			createdAt: payload.createdAt.toISOString()
 		})
 	}
 

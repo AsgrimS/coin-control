@@ -6,6 +6,7 @@ export interface BudgetDto {
 	readonly amount: number
 	readonly resetFrequency: Frequency
 	readonly name: string
+	readonly nextReset: Date
 }
 
 export interface BudgetCreateDto {

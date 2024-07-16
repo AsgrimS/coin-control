@@ -11,6 +11,7 @@ type CreateBudgetPayload = {
 	amount: number
 	resetFrequency: Frequency
 	name: string
+	nextReset: Date
 }
 
 type EditBudgetPayload = {
@@ -37,7 +38,8 @@ export class BudgetRepository implements IBudgetRepository {
 			userId: budget.userId,
 			amount: budget.amount,
 			resetFrequency: budget.resetFrequency,
-			name: budget.name
+			name: budget.name,
+			nextReset: new Date(budget.nextReset)
 		})
 	}
 
@@ -51,19 +53,21 @@ export class BudgetRepository implements IBudgetRepository {
 					userId: budget.userId,
 					amount: budget.amount,
 					resetFrequency: budget.resetFrequency,
-					name: budget.name
+					name: budget.name,
+					nextReset: new Date(budget.nextReset)
 				})
 		)
 	}
 
 	async createBudget(payload: CreateBudgetPayload): Promise<void> {
-		const { id, userId, amount, resetFrequency, name } = payload
+		const { id, userId, amount, resetFrequency, name, nextReset } = payload
 		await db.insert(budgetTable).values({
 			id,
 			userId,
 			amount,
-			resetFrequency: resetFrequency,
-			name
+			resetFrequency,
+			name,
+			nextReset: nextReset.toISOString()
 		})
 	}
 

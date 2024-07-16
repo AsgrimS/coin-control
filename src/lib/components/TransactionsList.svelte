@@ -89,7 +89,7 @@
 							{row.title || ""}
 						</td>
 						<td on:click={() => triggerTransactionDetailsModal(row)}>
-							{dateFormatter.format(new Date(row.createdAt + " GMT"))}
+							{dateFormatter.format(row.createdAt)}
 						</td>
 						<td class="cursor-default text-center">
 							<form

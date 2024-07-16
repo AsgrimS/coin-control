@@ -4,7 +4,7 @@ export class TransactionEntity {
 	readonly id: string
 	readonly userId: string
 	readonly budgetId: string
-	readonly createdAt: string
+	readonly createdAt: Date
 	readonly amount: number
 	readonly title: string | null
 
@@ -19,7 +19,7 @@ export class TransactionEntity {
 		id: string
 		userId: string
 		budgetId: string
-		createdAt: string
+		createdAt: Date
 		amount: number
 		title: string | null
 	}) {

@@ -53,7 +53,8 @@ export class TransactionService implements ITransactionService {
 				budgetId: payload.budgetId,
 				userId: payload.userId,
 				amount: payload.amount,
-				title: payload.title
+				title: payload.title,
+				createdAt: new Date()
 			})
 		} catch (error) {
 			console.error(error)
