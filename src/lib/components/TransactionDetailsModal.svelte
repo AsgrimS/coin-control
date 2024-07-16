@@ -25,7 +25,6 @@
 		hour: "numeric",
 		minute: "numeric"
 	})
-
 </script>
 
 {#if transaction}
