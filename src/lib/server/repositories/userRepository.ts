@@ -58,3 +58,27 @@ export class UserRepository implements IUserRepository {
 		})
 	}
 }
+
+/** Mock implementation of the IUserRepository interface to be used in tests for other services. */
+export class MockUserRepository implements IUserRepository {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async createUser(_payload: CreateUserPayload): Promise<void> {
+		return
+	}
+
+	async getUserByUsername(username: string): Promise<UserEntity> {
+		return new UserEntity({
+			id: "mock-id",
+			username,
+			hashedPassword: "mock-password"
+		})
+	}
+
+	async getUserById(id: string): Promise<UserEntity> {
+		return new UserEntity({
+			id,
+			username: "mock",
+			hashedPassword: "mock-password"
+		})
+	}
+}

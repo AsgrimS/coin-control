@@ -1,4 +1,5 @@
 import type { UserCreateDto, UserDto } from "$lib/dtos/user"
+import type { UserEntity } from "../entites/user"
 import { UserAlreadyExistsError, UserNotFoundError } from "../errors"
 import { UserRepository, type IUserRepository } from "../repositories/userRepository"
 
@@ -29,7 +30,7 @@ export class UserService implements IUserService {
 	}
 
 	async getUserByUsername(username: string): Promise<UserDto | null> {
-		let user
+		let user: UserEntity
 
 		try {
 			user = await this.userRepository.getUserByUsername(username)
@@ -42,7 +43,7 @@ export class UserService implements IUserService {
 	}
 
 	async getUserById(id: string): Promise<UserDto | null> {
-		let user
+		let user: UserEntity
 
 		try {
 			user = await this.userRepository.getUserById(id)

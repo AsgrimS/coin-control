@@ -1,7 +1,7 @@
 import { sveltekit } from "@sveltejs/kit/vite"
 import Icons from "unplugin-icons/vite"
-import { defineConfig } from "vite"
 import { purgeCss } from "vite-plugin-tailwind-purgecss"
+import { defineConfig } from "vitest/config"
 
 export default defineConfig({
 	plugins: [
@@ -10,5 +10,9 @@ export default defineConfig({
 		Icons({
 			compiler: "svelte"
 		})
-	]
+	],
+	test: {
+		environment: "node",
+		globals: true
+	}
 })
