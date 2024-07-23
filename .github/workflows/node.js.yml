@@ -50,4 +50,4 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Run linter
-        run: pnpm lint
+        run: pnpm lint:ci
