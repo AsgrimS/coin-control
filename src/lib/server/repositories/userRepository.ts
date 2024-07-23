@@ -77,7 +77,7 @@ export class MockUserRepository implements IUserRepository {
 	async getUserById(id: string): Promise<UserEntity> {
 		return new UserEntity({
 			id,
-			username: "mock",
+			username: "mock-username",
 			hashedPassword: "mock-password"
 		})
 	}

@@ -85,4 +85,30 @@ describe.concurrent("userService", () => {
 			await expect(userService.getUserByUsername("foobar")).rejects.toThrow("mock-error")
 		})
 	})
+
+	describe("getUserById", () => {
+		it("returns a user DTO with correct data", async () => {
+			const id = "mock-id"
+			const user = await userService.getUserById(id)
+			expect(user).toEqual({
+				id,
+				username: "mock-username",
+				hashedPassword: "mock-password"
+			} as UserDto)
+		})
+		it("returns null if the repository raises UserNotFoundError", async () => {
+			vi.spyOn(UserRepository.prototype, "getUserById").mockImplementationOnce(() => {
+				throw new UserNotFoundError()
+			})
+			const user = await userService.getUserById("mock-id")
+			expect(user).toBeNull()
+		})
+
+		it("throws an error if the repository raises an unexpected error", async () => {
+			vi.spyOn(UserRepository.prototype, "getUserById").mockImplementationOnce(() => {
+				throw new Error("mock-error")
+			})
+			await expect(userService.getUserById("mock-id")).rejects.toThrow("mock-error")
+		})
+	})
 })
