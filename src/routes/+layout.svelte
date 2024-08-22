@@ -14,8 +14,8 @@
 	import TransactionDetailsModal from "$lib/components/TransactionDetailsModal.svelte"
 
 	export let data: PageData
-	let { user } = data
 	$: user = data.user
+	$: budgetId = data.budgetId
 
 	initializeStores()
 	const drawerStore = getDrawerStore()
@@ -48,7 +48,7 @@
 
 <Drawer>
 	{#if $drawerStore.id === "userMenu" && user}
-		<UserDrawer {user} />
+		<UserDrawer {user} {budgetId} />
 	{:else if $drawerStore.id === "addTransaction"}
 		<AddTransactionDrawer />
 	{/if}

@@ -2,6 +2,10 @@
 
 A simple budgeting app that helps you keep track of your expenses.
 
+## Learning project disclaimer
+
+This is a learning project to practice DDD, CQRS and other software architecture concepts. The solutions here may not be something I would use in a production environment as many of them would be over-engineered for the problem at hand.
+
 ## Developing
 
 Once you've created a project and installed dependencies with `pnpm install`, start a development server:

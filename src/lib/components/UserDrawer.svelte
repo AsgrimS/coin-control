@@ -2,10 +2,16 @@
 	import { getDrawerStore } from "@skeletonlabs/skeleton"
 	import XIcon from "~icons/tabler/x"
 	import type { User } from "lucia"
+	import { navigating } from "$app/stores"
 
 	export let user: User
+	export let budgetId: string | null
 
 	const drawerStore = getDrawerStore()
+
+	navigating.subscribe((navigation) => {
+		if (navigation) drawerStore.close()
+	})
 </script>
 
 <section class="flex h-full flex-col p-4">
@@ -15,7 +21,11 @@
 	</div>
 	<hr class="mb-4 mt-1" />
 	<div class="flex flex-col gap-4">
-		<button disabled class="variant-filled btn">Edit Budget</button>
+		{#if budgetId}
+			<a class="variant-filled btn" href={`/budget/edit/${budgetId}`}>Edit Budget</a>
+		{:else}
+			<button disabled class="variant-filled btn">Edit Budget</button>
+		{/if}
 		<button disabled class="variant-filled btn">Create New Budget</button>
 	</div>
 	<hr class="my-2 mt-auto" />
