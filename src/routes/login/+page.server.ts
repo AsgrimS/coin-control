@@ -1,11 +1,8 @@
-import type { UserDTO } from "$lib/dtos/user"
 import { loginSchema } from "$lib/forms"
+import { findUserByUsernameQuery } from "$lib/server/app"
 import { lucia } from "$lib/server/auth"
-import { appContainer } from "$lib/server/dependencyInjection/inversify.config"
-import { TYPES } from "$lib/server/dependencyInjection/types"
 import { getLimiter } from "$lib/server/limiter"
 import { AuthService } from "$lib/server/services/authService"
-import type { IQuery } from "$lib/server/shared/query"
 import type { Actions, PageServerLoad } from "./$types"
 import { fail, redirect, error } from "@sveltejs/kit"
 import { setError, superValidate } from "sveltekit-superforms"
@@ -13,9 +10,6 @@ import { typebox } from "sveltekit-superforms/adapters"
 
 const limiter = getLimiter("login")
 const authService = new AuthService()
-const findUserByUsernameQuery = appContainer.get<IQuery<string, UserDTO>>(
-	TYPES.FindUserByUsernameQuery
-)
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) redirect(302, "/")

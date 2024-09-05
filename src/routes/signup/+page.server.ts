@@ -1,11 +1,8 @@
-import type { CreateUserDTO } from "$lib/dtos/user"
 import { signUpSchema } from "$lib/forms"
+import { createUserCommand } from "$lib/server/app"
 import { lucia } from "$lib/server/auth"
-import { appContainer } from "$lib/server/dependencyInjection/inversify.config"
-import { TYPES } from "$lib/server/dependencyInjection/types"
 import { getLimiter } from "$lib/server/limiter"
 import { AuthService } from "$lib/server/services/authService"
-import type { ICommand } from "$lib/server/shared/command"
 import type { Actions, PageServerLoad } from "./$types"
 import { error, fail, redirect } from "@sveltejs/kit"
 import { superValidate, setError } from "sveltekit-superforms"
@@ -13,8 +10,6 @@ import { typebox } from "sveltekit-superforms/adapters"
 
 const limiter = getLimiter("signup", [5, "m"])
 const authService = new AuthService()
-
-const createUserCommand = appContainer.get<ICommand<CreateUserDTO>>(TYPES.CreateUserCommand)
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(typebox(signUpSchema))
