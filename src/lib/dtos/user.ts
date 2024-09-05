@@ -1,4 +1,4 @@
-export interface UserDto {
+export interface UserDTO {
 	readonly id: string
 	readonly username: string
 	readonly hashedPassword: string

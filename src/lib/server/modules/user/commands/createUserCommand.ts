@@ -1,30 +1,35 @@
 import type { CreateUserDTO } from "$lib/dtos/user"
+import { TYPES } from "$lib/server/dependencyInjection/types"
+import type { ICommand } from "$lib/server/shared/command"
 import { err, ok, type Result } from "$lib/server/shared/results"
 import { UserEntity } from "../domain/userEntity"
 import { UserPasswordVO } from "../domain/value-objects/userPassword"
 import { UsernameVO } from "../domain/value-objects/username"
-import { UserRepository } from "../infrastructure/userRepository"
+import type { IUserRepository } from "../infrastructure/userRepositoryPort"
+import { inject, injectable } from "inversify"
 
-export const createUserCommand = async (payload: CreateUserDTO): Promise<Result<void, string>> => {
-	const userRepository = new UserRepository()
+@injectable()
+export class CreateUserCommand implements ICommand<CreateUserDTO> {
+	@inject(TYPES.UserRepository) private readonly userRepository: IUserRepository
 
-	const useranemeResult = UsernameVO.from(payload.username)
-	const passwordResult = UserPasswordVO.from(payload.hashedPassword)
+	async execute(payload: CreateUserDTO): Promise<Result<void, string>> {
+		const usernameResult = UsernameVO.from(payload.username)
+		const passwordResult = UserPasswordVO.from(payload.hashedPassword)
 
-	if (useranemeResult.ok === false) return err("Invalid username")
-	if (passwordResult.ok === false) return err("Invalid password")
+		if (usernameResult.ok === false) return err("Invalid username")
+		if (passwordResult.ok === false) return err("Invalid password")
 
-	const user = UserEntity.from({
-		id: payload.id,
-		username: useranemeResult.data,
-		hashedPassword: passwordResult.data
-	})
+		const user = UserEntity.from({
+			id: payload.id,
+			username: usernameResult.data,
+			hashedPassword: passwordResult.data
+		})
 
-	const existingUser = await userRepository.findOneByUsername(user.Username)
+		const existingUser = await this.userRepository.findOneByUsername(user.Username)
+		if (existingUser) return err("User already exists")
 
-	if (existingUser) return err("User already exists")
+		await this.userRepository.save(user)
 
-	await userRepository.save(user)
-
-	return ok()
+		return ok()
+	}
 }

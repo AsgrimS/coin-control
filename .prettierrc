@@ -10,5 +10,6 @@
 		"@trivago/prettier-plugin-sort-imports"
 	],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
+	"importOrderParserPlugins": ["typescript", "decorators-legacy"],
 	"htmlWhitespaceSensitivity": "ignore"
 }

@@ -6,6 +6,7 @@ import { UserPasswordVO } from "../domain/value-objects/userPassword"
 import { UsernameVO } from "../domain/value-objects/username"
 import type { IUserRepository } from "./userRepositoryPort"
 import { eq, sql, type InferSelectModel } from "drizzle-orm"
+import { injectable } from "inversify"
 
 const buildUserEntity = (user: InferSelectModel<typeof userTable>): UserEntity => {
 	return UserEntity.from({
@@ -15,6 +16,7 @@ const buildUserEntity = (user: InferSelectModel<typeof userTable>): UserEntity =
 	})
 }
 
+@injectable()
 export class UserRepository implements IUserRepository {
 	async findOneById(id: string): Promise<Some<UserEntity>> {
 		const [user] = await db.select().from(userTable).where(eq(userTable.id, id))
