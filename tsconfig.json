@@ -10,7 +10,10 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"moduleResolution": "bundler",
-		"types": ["vitest/globals"]
+		"types": ["vitest/globals", "reflect-metadata"],
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"lib": ["es6"]
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	// except $lib which is handled by https://kit.svelte.dev/docs/configuration#files
