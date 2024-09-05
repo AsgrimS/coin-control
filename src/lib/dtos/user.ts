@@ -4,7 +4,7 @@ export interface UserDto {
 	readonly hashedPassword: string
 }
 
-export interface UserCreateDto {
+export interface CreateUserDTO {
 	readonly id: string
 	readonly username: string
 	readonly hashedPassword: string

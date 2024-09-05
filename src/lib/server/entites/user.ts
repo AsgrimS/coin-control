@@ -1,4 +1,4 @@
-import type { UserDto } from "$lib/dtos/user"
+import type { UserDTO } from "$lib/dtos/user"
 
 export class UserEntity {
 	readonly id: string
@@ -19,7 +19,7 @@ export class UserEntity {
 		this.hashedPassword = hashedPassword
 	}
 
-	static fromDTO(dto: UserDto) {
+	static fromDTO(dto: UserDTO) {
 		return new UserEntity({
 			id: dto.id,
 			username: dto.username,
@@ -27,7 +27,7 @@ export class UserEntity {
 		})
 	}
 
-	toDTO(): UserDto {
+	toDTO(): UserDTO {
 		return {
 			id: this.id,
 			username: this.username,

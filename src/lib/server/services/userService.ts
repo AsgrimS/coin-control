@@ -1,12 +1,12 @@
-import type { UserCreateDto, UserDto } from "$lib/dtos/user"
+import type { CreateUserDTO, UserDTO } from "$lib/dtos/user"
 import type { UserEntity } from "../entites/user"
 import { UserAlreadyExistsError, UserNotFoundError } from "../errors"
 import { UserRepository, type IUserRepository } from "../repositories/userRepository"
 
 export interface IUserService {
-	createUser(payload: UserCreateDto): Promise<boolean>
-	getUserByUsername(username: string): Promise<UserDto | null>
-	getUserById(id: string): Promise<UserDto | null>
+	createUser(payload: CreateUserDTO): Promise<boolean>
+	getUserByUsername(username: string): Promise<UserDTO | null>
+	getUserById(id: string): Promise<UserDTO | null>
 }
 
 export class UserService implements IUserService {
@@ -16,7 +16,7 @@ export class UserService implements IUserService {
 		this.userRepository = new UserRepository()
 	}
 
-	async createUser(payload: UserCreateDto): Promise<boolean> {
+	async createUser(payload: CreateUserDTO): Promise<boolean> {
 		try {
 			await this.userRepository.createUser({
 				...payload
@@ -29,7 +29,7 @@ export class UserService implements IUserService {
 		return true
 	}
 
-	async getUserByUsername(username: string): Promise<UserDto | null> {
+	async getUserByUsername(username: string): Promise<UserDTO | null> {
 		let user: UserEntity
 
 		try {
@@ -42,7 +42,7 @@ export class UserService implements IUserService {
 		return user.toDTO()
 	}
 
-	async getUserById(id: string): Promise<UserDto | null> {
+	async getUserById(id: string): Promise<UserDTO | null> {
 		let user: UserEntity
 
 		try {

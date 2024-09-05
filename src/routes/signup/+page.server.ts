@@ -1,15 +1,14 @@
 import { signUpSchema } from "$lib/forms"
 import { lucia } from "$lib/server/auth"
 import { getLimiter } from "$lib/server/limiter"
+import { createUserCommand } from "$lib/server/modules/user/commands/createUserCommand"
 import { AuthService } from "$lib/server/services/authService"
-import { UserService } from "$lib/server/services/userService"
 import type { Actions, PageServerLoad } from "./$types"
 import { error, fail, redirect } from "@sveltejs/kit"
 import { superValidate, setError } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
 
 const limiter = getLimiter("signup", [5, "m"])
-const userService = new UserService()
 const authService = new AuthService()
 
 export const load: PageServerLoad = async (event) => {
@@ -37,14 +36,14 @@ export const actions: Actions = {
 		const id = authService.generateUserId()
 		const hashedPassword = await authService.hashPassword(password)
 
-		const isUserCreated = await userService.createUser({
+		const result = await createUserCommand({
 			id,
 			username,
 			hashedPassword
 		})
 
-		if (!isUserCreated) {
-			setError(form, "username", "This username is already taken")
+		if (result.ok === false) {
+			setError(form, "username", result.error)
 			return fail(400, { form })
 		}
 

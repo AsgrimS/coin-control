@@ -8,17 +8,9 @@ class InvalidUsernameLengthError extends DomainError {
 	}
 }
 
-export class UsernameVO extends ValueObject {
-	private constructor(private readonly value: string) {
-		super()
-	}
-
-	get Value(): string {
-		return this.value
-	}
-
+export class UsernameVO extends ValueObject<string> {
 	static from(value: string): Result<UsernameVO, DomainError> {
-		if (value.length < 8) {
+		if (value.length < 3) {
 			return err(new InvalidUsernameLengthError())
 		}
 
@@ -27,5 +19,10 @@ export class UsernameVO extends ValueObject {
 		}
 
 		return ok(new UsernameVO(value))
+	}
+
+	/** Skips validation. Only to be used when creating a UsernameVO from a database value. */
+	static fromDB(value: string): UsernameVO {
+		return new UsernameVO(value)
 	}
 }
