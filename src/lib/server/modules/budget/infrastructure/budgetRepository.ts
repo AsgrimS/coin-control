@@ -110,7 +110,8 @@ export class BudgetRepository implements IBudgetRepository {
 						id: transaction.Value.id,
 						budgetId: budget.Id,
 						createdAt: transaction.Value.createdAt.toISOString(),
-						amount: transaction.Value.amount
+						amount: transaction.Value.amount,
+						title: transaction.Value.title
 					})
 					.onConflictDoNothing()
 			}
@@ -133,7 +134,8 @@ export class BudgetRepository implements IBudgetRepository {
 					id: transaction.Value.id,
 					budgetId: budget.Id,
 					createdAt: transaction.Value.createdAt.toISOString(),
-					amount: transaction.Value.amount
+					amount: transaction.Value.amount,
+					title: transaction.Value.title
 				})
 			}
 		})

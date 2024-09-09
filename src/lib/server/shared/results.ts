@@ -11,6 +11,7 @@ export type Result<T, E> = Ok<T> | Err<E>
  * @param data - The data to be wrapped in an Ok
  * @returns An Ok with the given data
  */
+// @ts-expect-error - The type of the data parameter is inferred from the given argument
 export const ok = <T>(data?: T): Ok<T> => ({ ok: true, data })
 
 /** Result of a failed operation
