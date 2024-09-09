@@ -5,8 +5,6 @@
 		"DEVBOX_COREPACK_ENABLED": "true"
 	},
 	"shell": {
-		"scripts": {
-			"pwa-generate-assets": "pnpm dlx @vite-pwa/assets-generator --preset minimal static/logo.svg"
-		}
+		"scripts": {}
 	}
 }
