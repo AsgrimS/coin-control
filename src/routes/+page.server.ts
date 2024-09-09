@@ -1,17 +1,16 @@
-import type { BudgetDto } from "$lib/dtos/budget"
-import { BudgetService } from "$lib/server/services/budgetService"
+import { findBudgetsByOwnerIdQuery } from "$lib/server/app"
 import type { PageServerLoad } from "./$types"
 import { redirect } from "@sveltejs/kit"
 
-const budgetService = new BudgetService()
-
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = locals.user
-	let budgets: BudgetDto[] = []
 
 	if (!user) redirect(302, "/login")
 
-	budgets = await budgetService.getBudgetsByUserId(user.id)
+	const queryResult = await findBudgetsByOwnerIdQuery.query(user.id)
+	if (queryResult.ok === false) redirect(302, "/offline")
+
+	const budgets = queryResult.data
 
 	if (budgets.length === 1) {
 		redirect(302, `/budget/details/${budgets[0].id}`)

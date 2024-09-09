@@ -34,7 +34,7 @@
 
 	<div class="card flex gap-2 p-2">
 		<div class="w-60">
-			<SpendingRadial spent={expenses} limit={data.budget.amount} />
+			<SpendingRadial spent={expenses} limit={data.budget.allowance} />
 		</div>
 		<BudgetSummary budget={data.budget} spent={expenses} />
 	</div>

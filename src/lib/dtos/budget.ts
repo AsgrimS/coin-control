@@ -1,19 +1,19 @@
 import type { Frequency } from "$lib/common"
 
-export interface BudgetDto {
+export interface BudgetDTO {
 	readonly id: string
-	readonly userId: string
-	readonly amount: number
+	readonly ownerId: string
+	readonly allowance: number
 	readonly resetFrequency: Frequency
 	readonly name: string
 	readonly nextReset: Date
 }
 
-export interface BudgetCreateDto {
-	readonly userId: string
-	readonly amount: number
-	readonly resetFrequency: Frequency
+export interface CreateBudgetDTO {
 	readonly name: string
+	readonly ownerId: string
+	readonly allowance: number
+	readonly resetFrequency: Frequency
 }
 
 export interface BudgetEditDto {

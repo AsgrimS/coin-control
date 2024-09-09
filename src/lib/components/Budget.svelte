@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { BudgetDto } from "$lib/dtos/budget"
+	import type { BudgetDTO } from "$lib/dtos/budget"
 
-	export let budget: BudgetDto
+	export let budget: BudgetDTO
 </script>
 
-<a class="variant-filled btn" href={`/budget/details/${budget.id}`}>Budget: ${budget.amount}</a>
+<a class="variant-filled btn" href={`/budget/details/${budget.id}`}>Budget: ${budget.allowance}</a>

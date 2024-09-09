@@ -37,11 +37,21 @@ export class UserRepository implements IUserRepository {
 		return buildUserEntity(user)
 	}
 
-	async save(user: UserEntity): Promise<void> {
+	async insert(user: UserEntity): Promise<void> {
 		await db.insert(userTable).values({
 			id: user.Id,
 			username: user.Username.Value,
 			hashed_password: user.Password.Value
 		})
+	}
+
+	async update(user: UserEntity): Promise<void> {
+		await db
+			.update(userTable)
+			.set({
+				username: user.Username.Value,
+				hashed_password: user.Password.Value
+			})
+			.where(eq(userTable.id, user.Id))
 	}
 }

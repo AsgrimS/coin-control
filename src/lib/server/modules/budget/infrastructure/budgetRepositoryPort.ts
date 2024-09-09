@@ -1,8 +1,9 @@
 import type { Some } from "$lib/server/shared/results"
+import type { BudgetEntity } from "../domain/budgetEntity"
 
 export interface IBudgetRepository {
-	data: string
-	// findOneById(id: string): Promise<Some<UserEntity>>
-	// findOneByUsername(username: UsernameVO): Promise<Some<UserEntity>>
-	// save(user: UserEntity): Promise<void>
+	findOneById(id: string): Promise<Some<BudgetEntity>>
+	findByOwnerId(ownerId: string): Promise<BudgetEntity[]>
+	insert(budget: BudgetEntity): Promise<void>
+	update(budget: BudgetEntity): Promise<void>
 }

@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { getDateFormatter } from "$lib/common"
-	import type { BudgetDto } from "$lib/dtos/budget"
+	import type { BudgetDTO } from "$lib/dtos/budget"
 
-	export let budget: BudgetDto
+	export let budget: BudgetDTO
 	export let spent: number
 
 	const dateFormatter = getDateFormatter("short")
 
-	$: leftover = budget.amount - spent
+	$: leftover = budget.allowance - spent
 </script>
 
 <div class="card variant-soft-surface flex flex-grow flex-col p-2">
 	<div class="flex flex-col gap-1">
 		<div class="flex flex-col">
 			<span class="font-bold">Limit:</span>
-			<span>$ {budget.amount.toFixed(2)}</span>
+			<span>$ {budget.allowance.toFixed(2)}</span>
 		</div>
 
 		<div class="flex flex-col">

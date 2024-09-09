@@ -14,9 +14,9 @@ export class CreateUserCommand implements ICommand<CreateUserDTO> {
 
 	async execute(payload: CreateUserDTO): Promise<Result<void, string>> {
 		const usernameResult = UsernameVO.from(payload.username)
-		const passwordResult = UserPasswordVO.from(payload.hashedPassword)
-
 		if (usernameResult.ok === false) return err("Invalid username")
+
+		const passwordResult = UserPasswordVO.from(payload.hashedPassword)
 		if (passwordResult.ok === false) return err("Invalid password")
 
 		const user = UserEntity.from({
@@ -28,7 +28,7 @@ export class CreateUserCommand implements ICommand<CreateUserDTO> {
 		const existingUser = await this.userRepository.findOneByUsername(user.Username)
 		if (existingUser) return err("User already exists")
 
-		await this.userRepository.save(user)
+		await this.userRepository.insert(user)
 
 		return ok()
 	}

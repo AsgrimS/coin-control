@@ -1,11 +1,9 @@
 import { createBudgetSchema } from "$lib/forms"
-import { BudgetService } from "$lib/server/services/budgetService"
+import { createBudgetCommand } from "$lib/server/app"
 import type { Actions, PageServerLoad } from "./$types"
 import { fail, redirect } from "@sveltejs/kit"
 import { superValidate } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
-
-const budgetService = new BudgetService()
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const currentUser = locals.user
@@ -26,14 +24,14 @@ export const actions: Actions = {
 
 		const { amount, resetFrequency, name } = form.data
 
-		const isBudgetCreated = await budgetService.createBudget({
-			userId: currentUser.id,
-			amount,
+		const result = await createBudgetCommand.execute({
+			ownerId: currentUser.id,
+			name,
 			resetFrequency,
-			name
+			allowance: amount
 		})
 
-		if (!isBudgetCreated) {
+		if (result.ok === false) {
 			return fail(400, { form })
 		}
 

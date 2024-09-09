@@ -1,13 +1,12 @@
 import { getTrimmedOrNull } from "$lib/common"
 import { createTransactionSchema, deleteTransactionSchema } from "$lib/forms"
-import { BudgetService } from "$lib/server/services/budgetService"
+import { findBudgetByIdQuery } from "$lib/server/app"
 import { TransactionService } from "$lib/server/services/transactionService"
 import type { Actions, PageServerLoad } from "./$types"
 import { fail, redirect } from "@sveltejs/kit"
 import { superValidate } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
 
-const budgetService = new BudgetService()
 const transactionService = new TransactionService()
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -15,16 +14,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	if (!user) redirect(302, "/login")
 
-	let budget = await budgetService.getBudgetById(params.budgetId)
+	const budgetQuery = await findBudgetByIdQuery.query({
+		budgetId: params.budgetId,
+		userId: user.id
+	})
 
-	if (!budget || budget.userId !== user.id) redirect(302, "/")
-
-	if (budget.nextReset < new Date()) {
-		await budgetService.refreshNextResetDate(budget.id)
-		budget = await budgetService.getBudgetById(params.budgetId)
-	}
-
-	if (!budget) redirect(302, "/")
+	if (budgetQuery.ok === false) redirect(302, "/")
+	const budget = budgetQuery.data
 
 	const transactionsDateRange = new Date(budget.nextReset)
 	if (budget.resetFrequency === "monthly") {

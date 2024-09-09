@@ -10,8 +10,8 @@ import { inject, injectable } from "inversify"
 export class FindUserByUsernameQuery implements IQuery<string, UserDTO> {
 	@inject(TYPES.UserRepository) private readonly userRepository: IUserRepository
 
-	async query(payload: string): Promise<Result<UserDTO, string>> {
-		const usernameResult = UsernameVO.from(payload)
+	async query(username: string): Promise<Result<UserDTO, string>> {
+		const usernameResult = UsernameVO.from(username)
 
 		if (usernameResult.ok === false) return err("Invalid username")
 
