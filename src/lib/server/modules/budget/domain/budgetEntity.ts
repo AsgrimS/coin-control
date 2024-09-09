@@ -94,6 +94,6 @@ export class BudgetEntity extends Entity {
 		if (transactionIdx === -1) return err(new TransactionNotFoundError())
 
 		this.transactions.splice(transactionIdx, 1)
-		ok()
+		return ok()
 	}
 }
