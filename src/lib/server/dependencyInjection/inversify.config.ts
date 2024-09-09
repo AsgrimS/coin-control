@@ -17,7 +17,7 @@ import {
 	FindBudgetByIdQuery,
 	type FindBudgetByIdQueryPayload
 } from "../modules/budget/queries/findBudgetByIdQuery"
-import { FindBudgetsByOwnerIdQuery } from "../modules/budget/queries/tfindBudgetsByOwnerIdQuery"
+import { FindBudgetsByOwnerIdQuery } from "../modules/budget/queries/findBudgetsByOwnerIdQuery"
 import { CreateBudgetCommand } from "../modules/budget/commands/createBudgetCommand"
 
 const appContainer = new Container()
