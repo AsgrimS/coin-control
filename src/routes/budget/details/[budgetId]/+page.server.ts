@@ -22,13 +22,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	if (budgetQuery.ok === false) redirect(302, "/")
 	const budget = budgetQuery.data
 
-	const transactionsDateRange = new Date(budget.nextReset)
-	if (budget.resetFrequency === "monthly") {
-		transactionsDateRange.setMonth(transactionsDateRange.getMonth() - 1)
-	} else if (budget.resetFrequency === "weekly") {
-		transactionsDateRange.setDate(transactionsDateRange.getDate() - 7)
-	}
-
 	const createTransactionForm = await superValidate(typebox(createTransactionSchema))
 	const removeTransactionForm = await superValidate(typebox(deleteTransactionSchema))
 
