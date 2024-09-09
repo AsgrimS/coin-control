@@ -34,7 +34,13 @@ export class FindBudgetByIdQuery implements IQuery<FindBudgetByIdQueryPayload, B
 			allowance: budget.Allowance.Value,
 			name: budget.Name.Value,
 			resetFrequency: budget.ResetFrequency.Value,
-			nextReset: budget.NextResetDate.Value
+			nextReset: budget.NextResetDate.Value,
+			transactions: budget.Transactions.map((t) => ({
+				id: t.Value.id,
+				amount: t.Value.amount,
+				title: t.Value.title,
+				createdAt: t.Value.createdAt
+			}))
 		})
 	}
 }

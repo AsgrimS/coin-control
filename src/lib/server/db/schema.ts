@@ -1,4 +1,5 @@
 import { frequency } from "../..//common"
+import { relations } from "drizzle-orm"
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core"
 
 export const userTable = sqliteTable("user", {
@@ -28,11 +29,12 @@ export const budgetTable = sqliteTable("budget", {
 	}).notNull()
 })
 
+export const budgetRelations = relations(budgetTable, ({ many }) => ({
+	transactions: many(transactionTable)
+}))
+
 export const transactionTable = sqliteTable("transaction", {
 	id: text("id").notNull().primaryKey(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => userTable.id),
 	budgetId: text("budget_id")
 		.notNull()
 		.references(() => budgetTable.id),
@@ -40,3 +42,7 @@ export const transactionTable = sqliteTable("transaction", {
 	createdAt: text("created_at").notNull(),
 	title: text("title", { length: 64 })
 })
+
+export const transactionRelations = relations(transactionTable, ({ one }) => ({
+	budget: one(budgetTable, { fields: [transactionTable.budgetId], references: [budgetTable.id] })
+}))

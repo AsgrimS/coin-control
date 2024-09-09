@@ -38,7 +38,8 @@ export class CreateBudgetCommand implements ICommand<CreateBudgetDTO> {
 			allowance: budgetAllowanceResult.data,
 			name: budgetNameResult.data,
 			resetFrequency: resetFrequencyResult.data,
-			nextResetDate: nextResetPolicy.getNextResetDate()
+			nextResetDate: nextResetPolicy.getNextResetDate(),
+			transactions: []
 		})
 
 		await this.budgetRepository.insert(budget)

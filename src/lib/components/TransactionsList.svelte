@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TransactionDto } from "$lib/dtos/transaction"
+	import type { TransactionDTO } from "$lib/dtos/transaction"
 	import { DataHandler } from "@vincjo/datatables"
 	import ThSort from "$lib/components/table/ThSort.svelte"
 	import RowCount from "$lib/components/table/RowCount.svelte"
@@ -11,7 +11,7 @@
 	import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton"
 	import { getDateFormatter } from "$lib/common"
 
-	export let transactions: TransactionDto[]
+	export let transactions: TransactionDTO[]
 	export let deleteFormActionName: string
 	export let deleteTransactionForm: SuperValidated<{ transactionId: string }>
 	export let onAddTransaction: () => void
@@ -41,7 +41,7 @@
 		}
 	})
 
-	const triggerTransactionDetailsModal = (transaction: TransactionDto) => {
+	const triggerTransactionDetailsModal = (transaction: TransactionDTO) => {
 		modalStore.trigger({
 			type: "component",
 			component: "transactionDetails",

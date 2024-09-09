@@ -1,20 +1,17 @@
-export interface TransactionDto {
+export interface TransactionDTO {
 	readonly id: string
-	readonly userId: string
-	readonly budgetId: string
 	readonly amount: number
 	readonly createdAt: Date
-	readonly title: string | null
+	readonly title: string
 }
 
-export interface TransactionCreateDto {
-	readonly userId: string
+export interface CreateTransactionDTO {
 	readonly budgetId: string
 	readonly amount: number
-	readonly title: string | null
+	readonly title: string
 }
 
-export interface TransactionByBudgetIdDto {
+export interface RemoveTransactionDTO {
 	readonly budgetId: string
-	readonly newerThanEqual?: Date
+	readonly transactionId: string
 }

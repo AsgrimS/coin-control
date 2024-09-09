@@ -1,4 +1,5 @@
 import type { BudgetDTO, CreateBudgetDTO } from "$lib/dtos/budget"
+import type { CreateTransactionDTO, RemoveTransactionDTO } from "$lib/dtos/transaction"
 import type { CreateUserDTO, UserDTO } from "$lib/dtos/user"
 import { appContainer } from "./dependencyInjection/inversify.config"
 import { TYPES } from "./dependencyInjection/types"
@@ -12,6 +13,12 @@ import type { IQuery } from "./shared/query"
 export const createUserCommand = appContainer.get<ICommand<CreateUserDTO>>(TYPES.CreateUserCommand)
 export const createBudgetCommand = appContainer.get<ICommand<CreateBudgetDTO>>(
 	TYPES.CreateBudgetCommand
+)
+export const addTransactionToBudgetCommand = appContainer.get<ICommand<CreateTransactionDTO>>(
+	TYPES.AddTransactionToBudgetCommand
+)
+export const removeTransactionFromBudgetCommand = appContainer.get<ICommand<RemoveTransactionDTO>>(
+	TYPES.RemoveTransactionFromBudgetCommand
 )
 
 // Queries

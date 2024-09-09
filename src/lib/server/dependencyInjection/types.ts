@@ -5,6 +5,8 @@ const TYPES = {
 	// Commands
 	CreateUserCommand: Symbol.for("CreateUserCommand"),
 	CreateBudgetCommand: Symbol.for("CreateBudgetCommand"),
+	AddTransactionToBudgetCommand: Symbol.for("AddTransactionToBudgetCommand"),
+	RemoveTransactionFromBudgetCommand: Symbol.for("RemoveTransactionFromBudgetCommand"),
 
 	// Queries
 	FindUserByUsernameQuery: Symbol.for("FindUserByUsernameQuery"),

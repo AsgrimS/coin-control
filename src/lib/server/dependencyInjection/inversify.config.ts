@@ -19,6 +19,9 @@ import {
 } from "../modules/budget/queries/findBudgetByIdQuery"
 import { FindBudgetsByOwnerIdQuery } from "../modules/budget/queries/findBudgetsByOwnerIdQuery"
 import { CreateBudgetCommand } from "../modules/budget/commands/createBudgetCommand"
+import type { CreateTransactionDTO, RemoveTransactionDTO } from "$lib/dtos/transaction"
+import { AddTransactionToBudgetCommand } from "../modules/budget/commands/addTransactionToBudgetCommand"
+import { RemoveTransactionFromBudgetCommand } from "../modules/budget/commands/removeTransactionFromBudgetCommand"
 
 const appContainer = new Container()
 
@@ -28,6 +31,12 @@ appContainer.bind<IBudgetRepository>(TYPES.BudgetRepository).to(BudgetRepository
 // Commands
 appContainer.bind<ICommand<CreateUserDTO>>(TYPES.CreateUserCommand).to(CreateUserCommand)
 appContainer.bind<ICommand<CreateBudgetDTO>>(TYPES.CreateBudgetCommand).to(CreateBudgetCommand)
+appContainer
+	.bind<ICommand<CreateTransactionDTO>>(TYPES.AddTransactionToBudgetCommand)
+	.to(AddTransactionToBudgetCommand)
+appContainer
+	.bind<ICommand<RemoveTransactionDTO>>(TYPES.RemoveTransactionFromBudgetCommand)
+	.to(RemoveTransactionFromBudgetCommand)
 
 // Queries
 appContainer

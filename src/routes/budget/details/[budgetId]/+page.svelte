@@ -23,7 +23,7 @@
 		drawerStore.open(drawerSettings)
 	}
 
-	$: expenses = data.transactions.reduce((acc, curr) => acc + curr.amount, 0)
+	$: expenses = data.budget.transactions.reduce((acc, curr) => acc + curr.amount, 0)
 </script>
 
 <section class="container mx-auto flex h-full flex-col gap-4">
@@ -40,7 +40,7 @@
 	</div>
 
 	<TransactionsList
-		transactions={data.transactions}
+		transactions={data.budget.transactions}
 		deleteFormActionName={"deleteTransaction"}
 		deleteTransactionForm={data.removeTransactionForm}
 		onAddTransaction={addTransaction}

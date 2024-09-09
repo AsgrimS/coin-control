@@ -1,4 +1,5 @@
 import type { Frequency } from "$lib/common"
+import type { TransactionDTO } from "./transaction"
 
 export interface BudgetDTO {
 	readonly id: string
@@ -7,6 +8,7 @@ export interface BudgetDTO {
 	readonly resetFrequency: Frequency
 	readonly name: string
 	readonly nextReset: Date
+	readonly transactions: TransactionDTO[]
 }
 
 export interface CreateBudgetDTO {

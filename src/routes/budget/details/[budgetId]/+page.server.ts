@@ -1,13 +1,14 @@
 import { getTrimmedOrNull } from "$lib/common"
 import { createTransactionSchema, deleteTransactionSchema } from "$lib/forms"
-import { findBudgetByIdQuery } from "$lib/server/app"
-import { TransactionService } from "$lib/server/services/transactionService"
+import {
+	addTransactionToBudgetCommand,
+	findBudgetByIdQuery,
+	removeTransactionFromBudgetCommand
+} from "$lib/server/app"
 import type { Actions, PageServerLoad } from "./$types"
 import { fail, redirect } from "@sveltejs/kit"
 import { superValidate } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
-
-const transactionService = new TransactionService()
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const { user } = locals
@@ -29,19 +30,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		transactionsDateRange.setDate(transactionsDateRange.getDate() - 7)
 	}
 
-	const transactions = await transactionService.getTransactionsByBudgetId({
-		budgetId: params.budgetId,
-		newerThanEqual: transactionsDateRange
-	})
-
 	const createTransactionForm = await superValidate(typebox(createTransactionSchema))
 	const removeTransactionForm = await superValidate(typebox(deleteTransactionSchema))
 
 	return {
 		createTransactionForm,
 		removeTransactionForm,
-		budget,
-		transactions
+		budget
 	}
 }
 
@@ -55,28 +50,30 @@ export const actions: Actions = {
 
 		const { amount, title } = form.data
 
-		const isTransactionCreated = await transactionService.createTransaction({
-			userId: currentUser.id,
-			budgetId: params.budgetId,
+		const result = await addTransactionToBudgetCommand.execute({
+			title,
 			amount,
-			title: getTrimmedOrNull(title)
+			budgetId: params.budgetId
 		})
 
-		if (!isTransactionCreated) {
+		if (result.ok === false) {
 			return fail(400, { form })
 		}
 	},
 
-	deleteTransaction: async ({ locals, request }) => {
+	deleteTransaction: async ({ params, locals, request }) => {
 		const currentUser = locals.user
 		if (!currentUser) redirect(302, "/login")
 
 		const form = await superValidate(request, typebox(deleteTransactionSchema))
 		const { transactionId } = form.data
 
-		const isTransactionDeleted = await transactionService.deleteTransaction(transactionId)
+		const result = await removeTransactionFromBudgetCommand.execute({
+			budgetId: params.budgetId,
+			transactionId
+		})
 
-		if (!isTransactionDeleted) {
+		if (result.ok === false) {
 			return fail(400, { form })
 		}
 	}

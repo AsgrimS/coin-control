@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getModalStore } from "@skeletonlabs/skeleton"
-	import type { TransactionDto } from "$lib/dtos/transaction"
+	import type { TransactionDTO } from "$lib/dtos/transaction"
 	import { getDateFormatter } from "$lib/common"
 
 	export let parent
@@ -17,7 +17,7 @@
 	].join(" ")
 
 	const modalStore = getModalStore()
-	$: transaction = $modalStore[0]?.meta.transaction as TransactionDto | undefined
+	$: transaction = $modalStore[0]?.meta.transaction as TransactionDTO | undefined
 
 	const dateFormatter = getDateFormatter("long")
 </script>
