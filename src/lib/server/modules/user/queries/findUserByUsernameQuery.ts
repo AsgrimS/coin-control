@@ -1,5 +1,5 @@
 import type { UserDTO } from "$lib/dtos/user"
-import { TYPES } from "$lib/server/dependencyInjection/types"
+import { TYPES } from "$lib/server/dependencies/types"
 import type { IQuery } from "$lib/server/shared/query"
 import { err, ok, type Result } from "$lib/server/shared/results"
 import { UsernameVO } from "../domain/value-objects/username"

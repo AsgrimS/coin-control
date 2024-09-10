@@ -1,5 +1,5 @@
 import type { CreateTransactionDTO } from "$lib/dtos/transaction"
-import { TYPES } from "$lib/server/dependencyInjection/types"
+import { TYPES } from "$lib/server/dependencies/types"
 import type { ICommand } from "$lib/server/shared/command"
 import { err, ok, type Result } from "$lib/server/shared/results"
 import { getRandomId } from "$lib/server/utils"

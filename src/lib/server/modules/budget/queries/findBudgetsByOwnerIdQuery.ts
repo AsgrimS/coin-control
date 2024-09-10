@@ -1,5 +1,5 @@
 import type { BudgetDTO } from "$lib/dtos/budget"
-import { TYPES } from "$lib/server/dependencyInjection/types"
+import { TYPES } from "$lib/server/dependencies/types"
 import type { IQuery } from "$lib/server/shared/query"
 import { ok, type Result } from "$lib/server/shared/results"
 import type { IBudgetRepository } from "../infrastructure/budgetRepositoryPort"
