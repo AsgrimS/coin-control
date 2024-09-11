@@ -10,7 +10,7 @@ import type { TransactionVO } from "./value-objects/transaction"
 
 class TransactionNotFoundError extends DomainError {
 	constructor() {
-		super("Transaction does not on this budget.")
+		super("Transaction does exist not in this budget.")
 	}
 }
 
