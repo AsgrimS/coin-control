@@ -12,11 +12,9 @@ export class FindUserByUsernameQuery implements IQuery<string, UserDTO> {
 
 	async query(username: string): Promise<Result<UserDTO, string>> {
 		const usernameResult = UsernameVO.from(username)
-
 		if (usernameResult.ok === false) return err("Invalid username")
 
 		const user = await this.userRepository.findOneByUsername(usernameResult.data)
-
 		if (!user) return err("User not found")
 
 		return ok({
