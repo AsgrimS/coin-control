@@ -1,15 +1,12 @@
 import { loginSchema } from "$lib/forms"
-import { findUserByUsernameQuery } from "$lib/server/app"
-import { lucia } from "$lib/server/auth"
+import { authService, findUserByUsernameQuery } from "$lib/server/app"
 import { getLimiter } from "$lib/server/limiter"
-import { AuthService } from "$lib/server/services/authService"
 import type { Actions, PageServerLoad } from "./$types"
 import { fail, redirect, error } from "@sveltejs/kit"
 import { setError, superValidate } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
 
 const limiter = getLimiter("login")
-const authService = new AuthService()
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) redirect(302, "/")
@@ -33,7 +30,7 @@ export const actions: Actions = {
 
 		if (result.ok === false) {
 			// This is to prevent timing attacks
-			authService.hashPassword(password)
+			await authService.hashPassword(password)
 			return setError(form, "password", incorrectCredentialsMessage)
 		}
 
@@ -42,9 +39,7 @@ export const actions: Actions = {
 		const isPasswordValid = await authService.verifyPassword(user.hashedPassword, password)
 		if (!isPasswordValid) return setError(form, "password", incorrectCredentialsMessage)
 
-		const session = await lucia.createSession(user.id, {})
-		const sessionCookie = lucia.createSessionCookie(session.id)
-
+		const sessionCookie = await authService.createSessionCookie(user.id)
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: ".",
 			...sessionCookie.attributes

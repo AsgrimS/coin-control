@@ -22,9 +22,15 @@ import { CreateBudgetCommand } from "../modules/budget/commands/createBudgetComm
 import type { CreateTransactionDTO, RemoveTransactionDTO } from "$lib/dtos/transaction"
 import { AddTransactionToBudgetCommand } from "../modules/budget/commands/addTransactionToBudgetCommand"
 import { RemoveTransactionFromBudgetCommand } from "../modules/budget/commands/removeTransactionFromBudgetCommand"
+import type { IAuthService } from "../services/authServicePort"
+import { AuthService } from "../services/authService"
 
 const appContainer = new Container()
 
+// Services
+appContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
+
+// Repositories
 appContainer.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
 appContainer.bind<IBudgetRepository>(TYPES.BudgetRepository).to(BudgetRepository)
 

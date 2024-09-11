@@ -4,10 +4,14 @@ import type { CreateUserDTO, UserDTO } from "$lib/dtos/user"
 import { appContainer } from "./dependencies/inversify.config"
 import { TYPES } from "./dependencies/types"
 import type { FindBudgetByIdQueryPayload } from "./modules/budget/queries/findBudgetByIdQuery"
+import type { IAuthService } from "./services/authServicePort"
 import type { ICommand } from "./shared/command"
 import type { IQuery } from "./shared/query"
 
 // This file acts as composition root for the application.
+
+// Services
+export const authService = appContainer.get<IAuthService>(TYPES.AuthService)
 
 // Commands
 export const createUserCommand = appContainer.get<ICommand<CreateUserDTO>>(TYPES.CreateUserCommand)

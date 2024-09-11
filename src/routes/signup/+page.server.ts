@@ -1,15 +1,12 @@
 import { signUpSchema } from "$lib/forms"
-import { createUserCommand } from "$lib/server/app"
-import { lucia } from "$lib/server/auth"
+import { authService, createUserCommand } from "$lib/server/app"
 import { getLimiter } from "$lib/server/limiter"
-import { AuthService } from "$lib/server/services/authService"
 import type { Actions, PageServerLoad } from "./$types"
 import { error, fail, redirect } from "@sveltejs/kit"
 import { superValidate, setError } from "sveltekit-superforms"
 import { typebox } from "sveltekit-superforms/adapters"
 
 const limiter = getLimiter("signup", [5, "m"])
-const authService = new AuthService()
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(typebox(signUpSchema))
@@ -47,8 +44,7 @@ export const actions: Actions = {
 			return fail(400, { form })
 		}
 
-		const session = await lucia.createSession(id, {})
-		const sessionCookie = lucia.createSessionCookie(session.id)
+		const sessionCookie = await authService.createSessionCookie(id)
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: ".",
 			...sessionCookie.attributes

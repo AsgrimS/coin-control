@@ -1,4 +1,8 @@
 const TYPES = {
+	// Services
+	AuthService: Symbol.for("AuthService"),
+
+	// Repositories
 	UserRepository: Symbol.for("UserRepository"),
 	BudgetRepository: Symbol.for("BudgetRepository"),
 
