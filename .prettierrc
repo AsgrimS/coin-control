@@ -1,0 +1,15 @@
+{
+	"$schema": "http://json.schemastore.org/prettierrc",
+	"useTabs": true,
+	"printWidth": 120,
+	"semi": false,
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	]
+}

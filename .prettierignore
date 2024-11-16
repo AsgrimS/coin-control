@@ -1,0 +1,4 @@
+pnpm-lock.yaml
+src-tauri/
+static/
+src/lib/bindings.ts
