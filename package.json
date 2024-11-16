@@ -19,11 +19,15 @@
 		"@tauri-apps/plugin-shell": "^2"
 	},
 	"devDependencies": {
+		"@skeletonlabs/skeleton": "^2.10.3",
+		"@skeletonlabs/tw-plugin": "^0.4.0",
 		"@sveltejs/adapter-static": "^3.0.5",
 		"@sveltejs/kit": "^2.7.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"@tailwindcss/typography": "^0.5.14",
 		"@tauri-apps/cli": "^2",
 		"@types/eslint": "^9.6.0",
+		"@types/node": "^22.9.0",
 		"autoprefixer": "^10.4.20",
 		"eslint": "^9.14.0",
 		"eslint-config-prettier": "^9.1.0",
