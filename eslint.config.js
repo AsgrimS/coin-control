@@ -28,6 +28,6 @@ export default [
 		},
 	},
 	{
-		ignores: ["build/", ".svelte-kit/", "dist/", "src-tauri/", "static", "src/lib/bindings.ts"],
+		ignores: ["build/", ".svelte-kit/", "dist/", "src-tauri/", "static", "src/lib/bindings.ts", "android-sdk/"],
 	},
 ]
