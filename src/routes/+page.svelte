@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Greet from "$lib/Greet.svelte"
+  import Greet from "$lib/components/Greet.svelte"
 </script>
 
 <div class="container mx-auto flex h-full items-center justify-center">

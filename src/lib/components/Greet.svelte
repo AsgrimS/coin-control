@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/core"
+  import { commands } from "$lib/bindings"
 
   let name = $state("")
   let greetMsg = $state("")
 
-  async function greet(event: Event) {
+  async function greetHandler(event: Event) {
     event.preventDefault()
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    greetMsg = await invoke("greet", { name })
+    greetMsg = await commands.greet(name)
   }
 </script>
 
@@ -16,6 +16,6 @@
     <span>Enter your name</span>
     <input id="gree-input" placeholder="Enter a name..." bind:value={name} class="input" />
   </label>
-  <button class="variant-filled btn" onclick={greet}>Greet</button>
+  <button class="variant-filled btn" onclick={greetHandler}>Greet</button>
   <p class="card-footer">{greetMsg}</p>
 </div>
