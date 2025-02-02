@@ -42,7 +42,7 @@
   };
   scripts = {
     build-emulator.exec = ''
-      avdmanager create avd --force --name andorid-emulator --package 'system-images;android-32;google_apis_playstore;x86_64'
+      avdmanager create avd -d "pixel_7_pro" --force --name andorid-emulator --package 'system-images;android-32;google_apis_playstore;x86_64'
     '';
   };
 
