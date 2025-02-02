@@ -25,9 +25,9 @@
   ];
 
   languages = {
-    # rust = {
-    #   enable = true;
-    # };
+    rust = {
+      enable = true;
+    };
     javascript = {
       enable = true;
       corepack.enable = true;
