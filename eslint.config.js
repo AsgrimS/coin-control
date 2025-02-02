@@ -30,5 +30,8 @@ export default ts.config(
         parser: ts.parser
       }
     }
+  },
+  {
+    ignores: ["build/", ".svelte-kit/", "dist/", "src-tauri/", "static", "android-sdk/"],
   }
 );
