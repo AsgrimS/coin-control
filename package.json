@@ -21,6 +21,8 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.6",
     "@eslint/js": "^9.19.0",
+    "@skeletonlabs/skeleton": "^2.11.0",
+    "@skeletonlabs/tw-plugin": "^0.4.1",
     "@sveltejs/adapter-static": "^3.0.5",
     "@sveltejs/kit": "^2.7.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
