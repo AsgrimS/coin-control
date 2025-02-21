@@ -1,10 +1,9 @@
 <script lang="ts">
-  import Greet from "$lib/components/Greet.svelte"
+  import HandCoins from "lucide-svelte/icons/hand-coins"
 </script>
 
-<div class="container mx-auto flex h-full items-center justify-center">
-  <div class="space-y-5">
-    <h1 class="h1">Skeleton + Tauri = ❤️</h1>
-    <Greet />
-  </div>
+<!-- Content -->
+<div class="flex h-full items-center justify-center">
+  <p class="opacity-20"><HandCoins size="128" /></p>
+  <p class="ml-4 opacity-20">Coin Control</p>
 </div>
