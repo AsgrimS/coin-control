@@ -16,6 +16,6 @@
     <span>Enter your name</span>
     <input id="gree-input" placeholder="Enter a name..." bind:value={name} class="input" />
   </label>
-  <button class="variant-filled btn" onclick={greetHandler}>Greet</button>
+  <button class="preset-filled btn" onclick={greetHandler}>Greet</button>
   <p class="card-footer">{greetMsg}</p>
 </div>
