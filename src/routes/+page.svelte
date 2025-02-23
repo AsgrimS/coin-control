@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { AddExpenseDrawer } from "$lib/components"
+  import { AddExpenseDrawer, SettingsDrawer } from "$lib/components"
 </script>
 
 <!-- Content -->
 <div class="flex h-full items-center justify-center">
+  <SettingsDrawer />
   <AddExpenseDrawer />
 </div>
