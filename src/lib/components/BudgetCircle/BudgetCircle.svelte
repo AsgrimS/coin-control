@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ProgressRing, Progress } from "@skeletonlabs/skeleton-svelte"
+  import { ProgressRing } from "@skeletonlabs/skeleton-svelte"
   import Coins from "lucide-svelte/icons/coins"
 
   interface Props {
