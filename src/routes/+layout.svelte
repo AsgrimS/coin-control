@@ -1,7 +1,15 @@
 <script>
+  import { SettingsDrawer } from "$lib/components"
+  import { AddExpenseDrawer } from "$lib/components"
   import "../app.postcss"
+
+  let { children } = $props()
 </script>
 
-<main class="h-screen">
-  <slot></slot>
-</main>
+<div class="grid h-screen grid-rows-[auto_1fr_auto]">
+  <header class="sticky top-0 z-10 flex justify-end p-4"><SettingsDrawer /></header>
+  <main>
+    {@render children()}
+  </main>
+  <footer class="flex justify-center p-4"><AddExpenseDrawer /></footer>
+</div>

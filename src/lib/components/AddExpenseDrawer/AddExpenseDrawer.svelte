@@ -19,7 +19,7 @@
 
 <Modal
   bind:open={drawerState}
-  triggerBase="btn-icon size-[48px] text-primary-500 preset-outlined-primary-500"
+  triggerBase="btn-icon size-[64px] text-primary-500 preset-outlined-primary-500"
   contentBase="bg-surface-100-900 shadow-xl h-[240px] p-4 w-full max-w-[560px] rounded-t-lg flex items-center flex-col gap-4 justify-center"
   transitionsPositionerIn={{ y: 240, duration: 200 }}
   transitionsPositionerOut={{ y: 240, duration: 200 }}
@@ -29,7 +29,7 @@
   closeOnInteractOutside={!isLoading}
 >
   {#snippet trigger()}
-    <Plus size={48} />
+    <Plus size={64} />
   {/snippet}
   {#snippet content()}
     {#if isLoading}
