@@ -29,14 +29,15 @@
       enable = true;
       channel = "stable";
       targets = [
-      "aarch64-linux-android"
-      "armv7-linux-androideabi"
-      "i686-linux-android"
-      "x86_64-linux-android"
+        "aarch64-linux-android"
+        "armv7-linux-androideabi"
+        "i686-linux-android"
+        "x86_64-linux-android"
       ];
     };
     javascript = {
       enable = true;
+      package = pkgs.nodejs_22;
       corepack.enable = true;
     };
   };
@@ -45,7 +46,6 @@
       avdmanager create avd -d "pixel_7_pro" --force --name andorid-emulator --package 'system-images;android-32;google_apis_playstore;x86_64'
     '';
   };
-
 
   env = {
     WEBKIT_DISABLE_DMABUF_RENDERER = 1;
