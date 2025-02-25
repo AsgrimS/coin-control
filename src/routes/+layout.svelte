@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
+  import "../app.css"
   import { SettingsDrawer } from "$lib/components"
   import { AddExpenseDrawer } from "$lib/components"
-  import "../app.postcss"
 
   let { children } = $props()
 </script>
