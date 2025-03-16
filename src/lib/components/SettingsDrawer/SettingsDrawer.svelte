@@ -10,7 +10,8 @@
 </script>
 
 <Modal
-  bind:open={drawerState}
+  open={drawerState}
+  onOpenChange={(e) => (drawerState = e.open)}
   triggerBase={`btn-icon size-[64px]`}
   contentBase="bg-surface-100-900 p-4 space-y-4 shadow-xl w-[480px] h-screen flex flex-col gap-4 justify-between"
   positionerJustify="justify-end"

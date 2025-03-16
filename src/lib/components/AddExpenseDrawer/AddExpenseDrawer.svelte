@@ -18,7 +18,8 @@
 </script>
 
 <Modal
-  bind:open={drawerState}
+  open={drawerState}
+  onOpenChange={(e) => (drawerState = e.open)}
   triggerBase="btn-icon size-[64px] text-primary-500 preset-outlined-primary-500"
   contentBase="bg-surface-100-900 shadow-xl h-[240px] p-4 w-full max-w-[560px] rounded-t-lg flex items-center flex-col gap-4 justify-center"
   transitionsPositionerIn={{ y: 240, duration: 200 }}
