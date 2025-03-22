@@ -11,4 +11,4 @@ This project uses [devenv](https://devenv.sh/getting-started/) for creating deve
 1. Install android studio package globally and create virtual device with it
 2. Run link-emulator to symlink the .android folder to this project's root directory
 3. Start the virtual device from the Device Manager GUI
-4. run `pnpm run tauri android dev`
+4. run `pnpm run tauri android dev` it should detect actively running emulator.
