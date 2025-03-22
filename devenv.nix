@@ -1,7 +1,17 @@
 { pkgs, ... }:
 
 {
-  android.enable = true;
+  android = {
+    enable = true;
+    platforms.version = [ "34" ];
+    emulator = {
+      enable = true;
+      version = "34.1.9";
+    };
+    buildTools.version = [ "34.0.0" ];
+    platformTools.version = "34.0.5";
+    cmdLineTools.version = "13.0";
+  };
 
   packages = with pkgs; [
     at-spi2-atk
@@ -42,8 +52,8 @@
     };
   };
   scripts = {
-    build-emulator.exec = ''
-      avdmanager create avd -d "pixel_7_pro" --force --name andorid-emulator --package 'system-images;android-32;google_apis_playstore;x86_64'
+    link-emulator.exec = ''
+      ln -s $HOME/.android $PWD/.android
     '';
   };
 
