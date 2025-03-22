@@ -1,11 +1,16 @@
+mod domain;
+
 use specta_typescript::Typescript;
 use tauri_specta::{collect_commands, Builder};
+
+use domain::budget::{ports::BudgetServicePort, service::BudgetService};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 #[specta::specta]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn greet(_name: &str) -> String {
+    let budget_service = BudgetService::new();
+    budget_service.get_budget()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
