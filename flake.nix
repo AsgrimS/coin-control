@@ -50,6 +50,7 @@
               complete.rustc
               complete.cargo
               complete.clippy
+              complete.rust-src
               targets.aarch64-linux-android.latest.rust-std
               targets.armv7-linux-androideabi.latest.rust-std
               targets.i686-linux-android.latest.rust-std
