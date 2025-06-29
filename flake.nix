@@ -24,8 +24,8 @@
 
         android_sdk =
           (pkgs.androidenv.composeAndroidPackages {
-            platformVersions = [ "34" ];
-            ndkVersions = [ "26.3.11579264" ];
+            platformVersions = [ "36" ];
+            ndkVersions = [ "27.2.12479018" ];
             includeNDK = true;
             useGoogleAPIs = false;
             useGoogleTVAddOns = false;
@@ -35,13 +35,15 @@
           }).androidsdk;
 
         packages = with pkgs; [
-          curl
-          wget
-          pkg-config
-
-          nodejs_22
           pnpm
+          rust-analyzer
+          android_sdk
+          jdk
+        ];
 
+        nativeBuildInputs = with pkgs; [
+          pkg-config
+          gobject-introspection
           (
             with fenix.packages.${system};
             combine [
@@ -54,33 +56,42 @@
               targets.x86_64-linux-android.latest.rust-std
             ]
           )
-          rust-analyzer
-
-          android_sdk
-          jdk
+          cargo-tauri
+          nodejs_22
         ];
 
-        libraries = with pkgs; [
-          gtk3
-          libsoup_3
-          webkitgtk_4_1
+        buildInputs = with pkgs; [
+          at-spi2-atk
+          atkmm
           cairo
           gdk-pixbuf
           glib
-          dbus
-          openssl
+          gtk3
+          harfbuzz
           librsvg
+          libsoup_3
+          pango
+          webkitgtk_4_1
+          openssl
         ];
+
       in
       {
         devShell = pkgs.mkShell {
-          buildInputs = packages ++ libraries;
+          nativeBuildInputs = nativeBuildInputs;
+          buildInputs = buildInputs ++ packages;
 
-          LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH";
-          XDG_DATA_DIRS = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS";
+          LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath buildInputs}:$LD_LIBRARY_PATH";
+
+          #XDG_DATA_DIRS = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS";
           ANDROID_HOME = "${android_sdk}/libexec/android-sdk";
-          NDK_HOME = "${android_sdk}/libexec/android-sdk/ndk/26.3.11579264";
-          GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${android_sdk}/libexec/android-sdk/build-tools/34.0.0/aapt2";
+          NDK_HOME = "${android_sdk}/libexec/android-sdk/ndk-bundle";
+          GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${android_sdk}/libexec/android-sdk/build-tools/36.0.0/aapt2";
+          WEBKIT_DISABLE_DMABUF_RENDERER = 1;
+
+          shellHook = ''
+            alias link-emulator='ln -s $HOME/.android $PWD/.android'
+          '';
         };
       }
     );

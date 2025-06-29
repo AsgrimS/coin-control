@@ -1,8 +1,8 @@
 # Setup
 
-This project uses [devenv](https://devenv.sh/getting-started/) for creating development environment.
+This project uses nix flake for creating development environment.
 
-1. Run `devenv shell` to activate your developer environment
+1. Run `nix develop` to activate your developer environment
 2. Run `pnpm install` to install all dependencies
 3. Run `pnpm run tauri dev` or `pnpm run tauri android dev` to start the app.
 
