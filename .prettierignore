@@ -1,5 +1,7 @@
 pnpm-lock.yaml
-src-tauri/
+!src-tauri/
+src-tauri/*
+!src-tauri/tauri.conf.json
 static/
 android-sdk/
 src/lib/bindings.ts
