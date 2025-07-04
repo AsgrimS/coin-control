@@ -13,13 +13,7 @@
     "windows": [
       {
         "title": "coin-control",
-        "label": "main",
-        "visible": false
-      },
-      {
-        "title": "coin-control",
-        "label": "splashscreen",
-        "url": "/loading"
+        "label": "main"
       }
     ],
     "security": {

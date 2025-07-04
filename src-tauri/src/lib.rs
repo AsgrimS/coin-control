@@ -3,9 +3,8 @@ mod domain;
 use migration::{Migrator, MigratorTrait};
 use sea_orm::{Database, DatabaseConnection};
 use specta_typescript::Typescript;
-use std::sync::Mutex;
 use tauri::async_runtime::spawn;
-use tauri::{path, AppHandle, Manager, State};
+use tauri::{AppHandle, Manager};
 use tauri_specta::{collect_commands, Builder};
 
 use domain::budget::{ports::BudgetServicePort, service::BudgetService};
@@ -15,15 +14,12 @@ use domain::budget::{ports::BudgetServicePort, service::BudgetService};
 #[specta::specta]
 fn greet(_name: &str) -> String {
     let budget_service = BudgetService::new();
+    log::info!("Invoked greet");
     budget_service.get_budget()
 }
 
 // Create a struct we'll use to track the completion of
 // setup related tasks
-struct SetupState {
-    backend_task: bool,
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = Builder::<tauri::Wry>::new()
@@ -36,11 +32,14 @@ pub fn run() {
         .expect("Failed to export typescript bindings");
 
     tauri::Builder::default()
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .level(log::LevelFilter::Info)
+                .level_for("sqlx::query", log::LevelFilter::Warn)
+                .build(),
+        )
         // Register a `State` to be managed by Tauri
         // We need write access to it so we wrap it in a `Mutex`
-        .manage(Mutex::new(SetupState {
-            backend_task: false,
-        }))
         // and finally tell Tauri how to invoke them
         .invoke_handler(builder.invoke_handler())
         .setup(|app| {
@@ -55,39 +54,12 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
-async fn set_complete(
-    app: AppHandle,
-    state: State<'_, Mutex<SetupState>>,
-    task: String,
-) -> Result<(), ()> {
-    // Lock the state without write access
-    let mut state_lock = state.lock().unwrap();
-    match task.as_str() {
-        "backend" => state_lock.backend_task = true,
-        _ => panic!("invalid task completed!"),
-    }
-    // Check if both tasks are completed
-    if state_lock.backend_task {
-        // Setup is complete, we can close the splashscreen
-        // and unhide the main window!
-        let splash_window = app.get_webview_window("splashscreen").unwrap();
-        let main_window = app.get_webview_window("main").unwrap();
-        splash_window.close().unwrap();
-        main_window.show().unwrap();
-    }
-    Ok(())
-}
-
 async fn setup_database_and_migrate(app: &AppHandle) -> Result<DatabaseConnection, String> {
-    let data_path = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| format!("Failed to get app data dir: {e}"))?;
-    let connection_string = data_path
-        .to_str()
-        .ok_or("Failed to convert data path to string")?;
-    let db_path = format!("sqlite://{connection_string}/coin-control.db");
-    print!("{connection_string}");
+    let data_path = app.path().app_data_dir().unwrap();
+    let connection_string = data_path.to_str().unwrap();
+    let db_path = format!("sqlite://{connection_string}/coin-control.db?mode=rwc");
+    log::debug!("DB connnection: {db_path}");
+
     let db = Database::connect(&db_path)
         .await
         .map_err(|e| format!("Failed to connect to database: {e}"))?;
@@ -99,19 +71,11 @@ async fn setup_database_and_migrate(app: &AppHandle) -> Result<DatabaseConnectio
 
 // An async function that does some heavy setup task
 async fn setup(app: AppHandle) -> Result<(), ()> {
-    println!("Performing really heavy backend setup task...");
+    log::info!("Running DB setup");
     if let Err(e) = setup_database_and_migrate(&app).await {
+        log::error!("{e}");
         panic!("Database setup failed: {e}");
     }
-    println!("Backend setup task completed!");
-    // Set the backend task as being completed
-    // Commands can be ran as regular functions as long as you take
-    // care of the input arguments yourself
-    set_complete(
-        app.clone(),
-        app.state::<Mutex<SetupState>>(),
-        "backend".to_string(),
-    )
-    .await?;
+    log::info!("DB setup completed");
     Ok(())
 }
