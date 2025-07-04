@@ -3,15 +3,15 @@
   import Coins from "lucide-svelte/icons/coins"
 
   interface Props {
-    currentSpendings: number
-    budget: number
+    balance: number
+    allowance: number
   }
 
-  let { budget, currentSpendings }: Props = $props()
+  let { allowance, balance }: Props = $props()
 </script>
 
 <div class="grid grid-cols-1 justify-center gap-4">
-  <ProgressRing value={currentSpendings} max={budget}>
+  <ProgressRing value={allowance - balance} max={allowance}>
     <Coins size={48} />
   </ProgressRing>
 </div>

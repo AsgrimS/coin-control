@@ -1,3 +1,5 @@
+use entity::budget;
+
 pub trait BudgetServicePort {
-    fn get_budget(&self) -> String;
+    async fn get_budget(&self, id: i32) -> Option<budget::Model>;
 }

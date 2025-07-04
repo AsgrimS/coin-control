@@ -5,8 +5,13 @@
 
 
 export const commands = {
-async greet(name: string) : Promise<string> {
-    return await TAURI_INVOKE("greet", { name });
+async getBudgetById(id: number) : Promise<Result<Model | null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_budget_by_id", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -20,7 +25,7 @@ async greet(name: string) : Promise<string> {
 
 /** user-defined types **/
 
-
+export type Model = { id: number; title: string; allowance: number; balance: number }
 
 /** tauri-specta globals **/
 

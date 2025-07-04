@@ -1,27 +1,32 @@
 mod domain;
 
+use entity::budget;
 use migration::{Migrator, MigratorTrait};
 use sea_orm::{Database, DatabaseConnection};
 use specta_typescript::Typescript;
+use std::sync::Arc;
 use tauri::async_runtime::spawn;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, State};
 use tauri_specta::{collect_commands, Builder};
+
+type SharedDb = Arc<DatabaseConnection>;
 
 use domain::budget::{ports::BudgetServicePort, service::BudgetService};
 
 #[tauri::command]
 #[specta::specta]
-fn greet(_name: &str) -> String {
-    let budget_service = BudgetService::new();
-    log::info!("Invoked greet");
-    budget_service.get_budget()
+async fn get_budget_by_id(
+    id: i32,
+    db: State<'_, SharedDb>,
+) -> Result<Option<budget::Model>, String> {
+    let budget_service = BudgetService::new(db.inner().clone());
+    let result = budget_service.get_budget(id).await;
+    Ok(result)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let builder = Builder::<tauri::Wry>::new()
-        // Then register them (separated by a comma)
-        .commands(collect_commands![greet,]);
+    let builder = Builder::<tauri::Wry>::new().commands(collect_commands![get_budget_by_id,]);
 
     #[cfg(all(debug_assertions, not(target_os = "android"), not(target_os = "ios")))]
     builder
@@ -35,18 +40,23 @@ pub fn run() {
                 .level_for("sqlx::query", log::LevelFilter::Warn)
                 .build(),
         )
-        // Register a `State` to be managed by Tauri
-        // We need write access to it so we wrap it in a `Mutex`
-        // and finally tell Tauri how to invoke them
-        .invoke_handler(builder.invoke_handler())
         .setup(|app| {
-            // Spawn setup as a non-blocking task so the windows can be
-            // created and ran while it executes
-            spawn(setup(app.handle().clone()));
-            // The hook expects an Ok result
+            let app_handle = app.handle().clone();
+            spawn(async move {
+                match setup_database_and_migrate(&app_handle).await {
+                    Ok(db) => {
+                        app_handle.manage::<SharedDb>(Arc::new(db));
+                        log::info!("DB setup completed");
+                    }
+                    Err(e) => {
+                        log::error!("{e}");
+                        panic!("Database setup failed: {e}");
+                    }
+                }
+            });
             Ok(())
         })
-        // on an actual app, remove the string argument
+        .invoke_handler(builder.invoke_handler())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -64,15 +74,4 @@ async fn setup_database_and_migrate(app: &AppHandle) -> Result<DatabaseConnectio
         .await
         .map_err(|e| format!("Failed to run migrations: {e}"))?;
     Ok(db)
-}
-
-// An async function that does some heavy setup task
-async fn setup(app: AppHandle) -> Result<(), ()> {
-    log::info!("Running DB setup");
-    if let Err(e) = setup_database_and_migrate(&app).await {
-        log::error!("{e}");
-        panic!("Database setup failed: {e}");
-    }
-    log::info!("DB setup completed");
-    Ok(())
 }
