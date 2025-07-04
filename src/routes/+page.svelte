@@ -13,6 +13,6 @@
       <BudgetCircle balance={data.budget.balance} allowance={data.budget.allowance} />
     </div>
   {:else}
-    <p class="text-surface-900">No budget set</p>
+    <p>No budget set</p>
   {/if}
 </div>

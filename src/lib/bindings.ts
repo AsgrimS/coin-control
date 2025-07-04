@@ -12,6 +12,14 @@ async getBudgetById(id: number) : Promise<Result<Model | null, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+async getAllBudgets() : Promise<Result<Model[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_budgets") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 

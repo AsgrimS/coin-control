@@ -21,4 +21,11 @@ impl BudgetServicePort for BudgetService {
             .await
             .ok()?
     }
+
+    async fn get_all_budgets(&self) -> Vec<budget::Model> {
+        budget::Entity::find()
+            .all(self.db.as_ref())
+            .await
+            .unwrap_or_default()
+    }
 }

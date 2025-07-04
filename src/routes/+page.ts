@@ -3,10 +3,10 @@ import { info } from "@tauri-apps/plugin-log"
 import type { PageLoad } from "./$types"
 
 export const load: PageLoad = async () => {
-  const budget = await commands.getBudgetById(1)
-  info(`Loaded budget: ${JSON.stringify(budget)}`)
+  const budgets = await commands.getAllBudgets()
+  info(`Loaded budget: ${JSON.stringify(budgets)}`)
 
   return {
-    budget: budget.status === "ok" ? budget.data : null,
+    budget: budgets.status === "ok" ? (budgets.data[0] ?? null) : null,
   }
 }

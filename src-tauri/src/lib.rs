@@ -7,6 +7,7 @@ use specta_typescript::Typescript;
 use std::sync::Arc;
 use tauri::async_runtime::spawn;
 use tauri::{AppHandle, Manager, State};
+use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 use tauri_specta::{collect_commands, Builder};
 
 type SharedDb = Arc<DatabaseConnection>;
@@ -20,13 +21,20 @@ async fn get_budget_by_id(
     db: State<'_, SharedDb>,
 ) -> Result<Option<budget::Model>, String> {
     let budget_service = BudgetService::new(db.inner().clone());
-    let result = budget_service.get_budget(id).await;
-    Ok(result)
+    Ok(budget_service.get_budget(id).await)
+}
+
+#[tauri::command]
+#[specta::specta]
+async fn get_all_budgets(db: State<'_, SharedDb>) -> Result<Vec<budget::Model>, String> {
+    let budget_service = BudgetService::new(db.inner().clone());
+    Ok(budget_service.get_all_budgets().await)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let builder = Builder::<tauri::Wry>::new().commands(collect_commands![get_budget_by_id,]);
+    let builder =
+        Builder::<tauri::Wry>::new().commands(collect_commands![get_budget_by_id, get_all_budgets]);
 
     #[cfg(all(debug_assertions, not(target_os = "android"), not(target_os = "ios")))]
     builder
@@ -36,8 +44,9 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
-                .level(log::LevelFilter::Debug)
+                .with_colors(ColoredLevelConfig::default())
                 .level_for("sqlx::query", log::LevelFilter::Warn)
+                .level(log::LevelFilter::Debug)
                 .build(),
         )
         .setup(|app| {
