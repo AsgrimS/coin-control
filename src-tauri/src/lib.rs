@@ -9,7 +9,6 @@ use tauri_specta::{collect_commands, Builder};
 
 use domain::budget::{ports::BudgetServicePort, service::BudgetService};
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 #[specta::specta]
 fn greet(_name: &str) -> String {
@@ -18,8 +17,6 @@ fn greet(_name: &str) -> String {
     budget_service.get_budget()
 }
 
-// Create a struct we'll use to track the completion of
-// setup related tasks
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = Builder::<tauri::Wry>::new()
@@ -34,7 +31,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()
-                .level(log::LevelFilter::Info)
+                .level(log::LevelFilter::Debug)
                 .level_for("sqlx::query", log::LevelFilter::Warn)
                 .build(),
         )
