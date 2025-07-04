@@ -14,7 +14,7 @@
       {
         "title": "coin-control",
         "label": "main",
-        "visible": true
+        "visible": false
       },
       {
         "title": "coin-control",

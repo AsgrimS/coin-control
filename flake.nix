@@ -39,6 +39,7 @@
           rust-analyzer
           android_sdk
           jdk
+          sea-orm-cli
         ];
 
         nativeBuildInputs = with pkgs; [

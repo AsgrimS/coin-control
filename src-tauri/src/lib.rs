@@ -1,11 +1,11 @@
 mod domain;
 
+use sea_orm::{Database, DatabaseConnection};
 use specta_typescript::Typescript;
 use std::sync::Mutex;
 use tauri::async_runtime::spawn;
 use tauri::{AppHandle, Manager, State};
 use tauri_specta::{collect_commands, Builder};
-use tokio::time::{sleep, Duration};
 
 use domain::budget::{ports::BudgetServicePort, service::BudgetService};
 
@@ -66,21 +66,22 @@ async fn set_complete(
         _ => panic!("invalid task completed!"),
     }
     // Check if both tasks are completed
-    // if state_lock.backend_task {
-    //     // Setup is complete, we can close the splashscreen
-    //     // and unhide the main window!
-    //     let splash_window = app.get_webview_window("splashscreen").unwrap();
-    //     let main_window = app.get_webview_window("main").unwrap();
-    //     splash_window.close().unwrap();
-    //     main_window.show().unwrap();
-    // }
+    if state_lock.backend_task {
+        // Setup is complete, we can close the splashscreen
+        // and unhide the main window!
+        let splash_window = app.get_webview_window("splashscreen").unwrap();
+        let main_window = app.get_webview_window("main").unwrap();
+        splash_window.close().unwrap();
+        main_window.show().unwrap();
+    }
     Ok(())
 }
 
 // An async function that does some heavy setup task
 async fn setup(app: AppHandle) -> Result<(), ()> {
     println!("Performing really heavy backend setup task...");
-    sleep(Duration::from_secs(3)).await;
+    let db: DatabaseConnection = Database::connect("sqlite::memory:").await.map_err(|_| ())?;
+
     println!("Backend setup task completed!");
     // Set the backend task as being completed
     // Commands can be ran as regular functions as long as you take
