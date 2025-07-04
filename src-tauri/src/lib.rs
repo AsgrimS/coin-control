@@ -1,10 +1,11 @@
 mod domain;
 
+use migration::{Migrator, MigratorTrait};
 use sea_orm::{Database, DatabaseConnection};
 use specta_typescript::Typescript;
 use std::sync::Mutex;
 use tauri::async_runtime::spawn;
-use tauri::{AppHandle, Manager, State};
+use tauri::{path, AppHandle, Manager, State};
 use tauri_specta::{collect_commands, Builder};
 
 use domain::budget::{ports::BudgetServicePort, service::BudgetService};
@@ -77,11 +78,31 @@ async fn set_complete(
     Ok(())
 }
 
+async fn setup_database_and_migrate(app: &AppHandle) -> Result<DatabaseConnection, String> {
+    let data_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Failed to get app data dir: {e}"))?;
+    let connection_string = data_path
+        .to_str()
+        .ok_or("Failed to convert data path to string")?;
+    let db_path = format!("sqlite://{connection_string}/coin-control.db");
+    print!("{connection_string}");
+    let db = Database::connect(&db_path)
+        .await
+        .map_err(|e| format!("Failed to connect to database: {e}"))?;
+    Migrator::up(&db, None)
+        .await
+        .map_err(|e| format!("Failed to run migrations: {e}"))?;
+    Ok(db)
+}
+
 // An async function that does some heavy setup task
 async fn setup(app: AppHandle) -> Result<(), ()> {
     println!("Performing really heavy backend setup task...");
-    let db: DatabaseConnection = Database::connect("sqlite::memory:").await.map_err(|_| ())?;
-
+    if let Err(e) = setup_database_and_migrate(&app).await {
+        panic!("Database setup failed: {e}");
+    }
     println!("Backend setup task completed!");
     // Set the backend task as being completed
     // Commands can be ran as regular functions as long as you take
